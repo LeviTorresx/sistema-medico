@@ -2,7 +2,7 @@
 export default function Home() {
   return (
     <div>
-      sistema medico
+      sistema medico segundo commit
     </div>
   );
 }
