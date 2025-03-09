@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import PatientTable from "./components/PatientTable";
+import PatientTable from "./components/patientTable/PatientTable";
 import PrivateLayout from "../PrivateLayout";
 import { useRouter } from "next/navigation";
 
