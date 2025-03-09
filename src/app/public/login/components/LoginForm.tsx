@@ -1,53 +1,81 @@
-// src/components/LoginForm.tsx
 "use client";
-import { FormEvent } from "react";
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
+import useAuth from "./../../../hooks/useAuth";
 
 export default function LoginForm() {
-     const [email, setEmail] = useState("");
-     const [password, setPassword] = useState("");
-     const [error, setError] = useState("");
-     const router = useRouter();
+  const { login } = useAuth();
+  const [user, setUser] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
-     const handleSubmit = (e: FormEvent) => {
-          e.preventDefault();
-          if (email === "user@example.com" && password === "password") {
-               localStorage.setItem("token", "fake-jwt-token");
-               router.push("/dashboard");
-          } else {
-               setError("Credenciales incorrectas");
-          }
-     };
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
 
-     return (
-          <div className="bg-white shadow-lg rounded-lg p-6 w-full">
-               <h2 className="text-2xl font-bold mb-4 text-center text-pink-950">Iniciar sesión</h2>
-               {error && <p className="text-red-500 text-sm text-center">{error}</p>}
-               <form onSubmit={handleSubmit} className="space-y-4">
-                    <input
-                         type="email"
-                         placeholder="Correo electrónico"
-                         className="w-full p-2 border border-gray-400 rounded text-slate-950"
-                         value={email}
-                         onChange={(e) => setEmail(e.target.value)}
-                         required
-                    />
-                    <input
-                         type="password"
-                         placeholder="Contraseña"
-                         className="w-full p-2 border border-gray-400 rounded  text-slate-950"
-                         value={password}
-                         onChange={(e) => setPassword(e.target.value)}
-                         required
-                    />
-                    <button
-                         type="submit"
-                         className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
-                    >
-                         Ingresar
-                    </button>
-               </form>
-          </div>
-     );
+    try {
+      await login(user, password);
+      router.push("/private/dashboard");
+    } catch (err) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Error desconocido al iniciar sesión");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+     <div className="bg-white shadow-2xl rounded-2xl p-8 w-full max-w-md mx-auto">
+     <h2 className="text-3xl font-extrabold mb-6 text-center text-gray-800">
+       Iniciar sesión
+     </h2>
+     {error && (
+       <p className="text-red-600 bg-red-100 border border-red-400 rounded-md text-sm p-2 text-center mb-4">
+         {error}
+       </p>
+     )}
+     <form onSubmit={handleSubmit} className="space-y-5">
+       <div>
+         <input
+           type="text"
+           placeholder="Correo electrónico"
+           className="w-full px-4 py-3 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+           value={user}
+           onChange={(e) => setUser(e.target.value)}
+           required
+         />
+       </div>
+       <div>
+         <input
+           type="password"
+           placeholder="Contraseña"
+           className="w-full px-4 py-3 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+           value={password}
+           onChange={(e) => setPassword(e.target.value)}
+           required
+         />
+       </div>
+       <button
+         type="submit"
+         className="w-full bg-gradient-to-r from-blue-500 to-indigo-600 text-white py-3 rounded-lg text-lg font-semibold hover:shadow-lg transition-all duration-300 disabled:opacity-50"
+         disabled={loading}
+       >
+         {loading ? "Cargando..." : "Ingresar"}
+       </button>
+     </form>
+     <p className="text-center text-gray-600 text-sm mt-4">
+       ¿Olvidaste tu contraseña?{" "}
+       <a href="#" className="text-blue-500 hover:underline">
+         Recupérala aquí
+       </a>
+     </p>
+   </div>
+   
+  );
 }
