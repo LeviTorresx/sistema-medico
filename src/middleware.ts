@@ -1,23 +1,31 @@
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 export function middleware(req: NextRequest) {
-    const token = req.cookies.get("token")?.value;
+    const token = req.cookies.get("token")?.value; // 🔹 Obtener token desde cookies
 
-    // Si el usuario intenta acceder a una ruta protegida sin token, lo redirige al login
-    if (req.nextUrl.pathname.startsWith("/private") && !token) {
+    // Rutas públicas y privadas según tu estructura
+    const publicRoutes = ["/public/login"];
+    const privateRoutes = [
+        "/private/dashboard",
+        "/private/forms",
+        "/private/search",
+    ];
+
+    const pathname = req.nextUrl.pathname;
+
+    // 🔹 Si no tiene token y quiere acceder a una ruta privada, redirigir a login
+    if (!token && privateRoutes.some((route) => pathname.startsWith(route))) {
         return NextResponse.redirect(new URL("/public/login", req.url));
     }
 
-    // Si ya está autenticado y trata de ir al login, lo manda al dashboard
-    if (req.nextUrl.pathname === "/public/login" && token) {
+    // 🔹 Si tiene sesión activa e intenta entrar a login, redirigir al dashboard
+    if (token && publicRoutes.includes(pathname)) {
         return NextResponse.redirect(new URL("/private/dashboard", req.url));
     }
 
-    return NextResponse.next();
+    return NextResponse.next(); // Permite el acceso normal
 }
 
-// 🛠 Aplica el middleware solo a rutas que comiencen con "/private"
 export const config = {
-    matcher: "/private/:path*",
+    matcher: ["/private/:path*"], // 🔹 Aplica solo a rutas privadas
 };

@@ -14,6 +14,7 @@ export default function PrivateLayout({
   const { getUserInfo, logout } = useAuth();
   const userInfo = getUserInfo();
   const userName = userInfo?.sub || "Invitado"; // Si no hay nombre, muestra "Invitado"
+  console.log(userInfo);
 
   return (
     <>

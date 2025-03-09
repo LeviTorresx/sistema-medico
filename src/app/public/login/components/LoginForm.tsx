@@ -1,24 +1,29 @@
 "use client";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import useAuth from "./../../../hooks/useAuth";
 
 export default function LoginForm() {
-  const { login } = useAuth();
+  const { token, login } = useAuth();
   const [user, setUser] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
+  useEffect(() => {
+    if (token) {
+      router.push("/private/dashboard"); // 🔹 Ahora redirige cuando el token se actualiza
+    }
+  }, [token, router]);
+
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setError("");
     setLoading(true);
-
+    
     try {
       await login(user, password);
-      router.push("/private/dashboard");
     } catch (err) {
       if (err instanceof Error) {
         setError(err.message);
