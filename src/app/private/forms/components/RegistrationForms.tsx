@@ -1,109 +1,110 @@
 "use client";
 import { FormEvent, useState, ChangeEvent } from "react";
 import Section from "./Section";
+import { PatientState } from "@/app/redux/slices/patientSlice";
 export default function RegistrationForms() {
-  // Estado para almacenar los datos del formulario
-  const [formData, setFormData] = useState({
-    datosPersonales: {
-      nombre: "",
-      identificacion: "",
-      ciudadNacimiento: "",
-      fechaNacimiento: "",
-      edad: "",
-      escolaridad: "",
-      estadoCivil: "",
-      direccion: "",
-      telefono: "",
-      eps: "",
-      arl: "",
+  // State to store form data
+  const [formData, setFormData] = useState<PatientState>({
+    id: 0,
+    personalData: {
+      name: "",
+      identification: "",
+      birthCity: "",
+      birthDate: "",
+      age: "",
+      education: "",
+      maritalStatus: "",
+      address: "",
+      phone: "",
+      healthInsurance: "",
+      occupationalRiskInsurance: "",
     },
-    habitos: {
-      tabaquismo: false,
-      exfumador: false,
-      cigarrillosDia: "",
-      anosConsumo: "",
-      licor: false,
-      frecuenciaLicor: "",
-      sustancias: false,
-      deporte: false,
-      frecuenciaDeporte: "",
+    habits: {
+      smoking: false,
+      exSmoker: false,
+      cigarettesPerDay: "",
+      yearsOfConsumption: "",
+      alcohol: false,
+      alcoholFrequency: "",
+      substances: false,
+      sports: false,
+      sportsFrequency: "",
     },
-    antecedentesPersonales: {
-      patologicos: "",
-      hospitalarios: "",
-      quirurgicos: "",
-      traumaticos: "",
-      medicamentos: "",
-      toxicos: "",
-      alergicos: "",
-      otros: "",
+    personalHistory: {
+      pathological: "",
+      hospitalizations: "",
+      surgeries: "",
+      traumatic: "",
+      medications: "",
+      toxic: "",
+      allergies: "",
+      others: "",
     },
-    antecedentesFamiliares: {
-      metabolicos: false,
-      cardiopatia: false,
-      htaPadre: false,
+    familyHistory: {
+      metabolic: false,
+      heartDisease: false,
+      fatherHypertension: false,
       cancer: false,
-      otroAntecedente: "",
+      otherHistory: "",
     },
 
-    antecedentesGinecoObstetricos: {
-      menarca: "",
-      ciclos: "",
+    gynecologicalObstetricHistory: {
+      menarche: "",
+      cycles: "",
       g: "",
       p: "",
       a: "",
       v: "",
-      fum: "",
-      planifica: false,
-      metodoPlanificacion: "",
-      citologia: "",
+      lastMenstrualPeriod: "",
+      usesContraception: false,
+      contraceptionMethod: "",
+      papSmear: "",
     },
-    antecedentesLaborales: {
-      empresa: "",
-      cargo: "",
-      tiempo: "",
-      riesgos: {
-        fisico: false,
-        mecanico: false,
-        ergonomico: false,
-        psicosocial: false,
-        biologico: false,
+    workHistory: {
+      company: "",
+      jobTitle: "",
+      workDuration: "",
+      risks: {
+        physical: false,
+        mechanical: false,
+        ergonomic: false,
+        psychosocial: false,
+        biological: false,
       },
-      accidenteTrabajo: false,
-      enfermedadLaboral: false,
+      workAccident: false,
+      occupationalDisease: false,
     },
-    evaluacion: {
-      diagnosticos: [],
-      recomendaciones: "",
-      aptitudLaboral: "",
-      restricciones: "",
+    evaluation: {
+      diagnoses: [],
+      recommendations: "",
+      workAptitude: "",
+      restrictions: "",
     },
   });
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value, dataset, type, checked } = e.target;
-    const section = dataset.section as keyof typeof formData; // Sección donde está el campo
+    const section = dataset.section as keyof typeof formData; // Section where the field is located
 
     setFormData((prev) => ({
       ...prev,
       [section]: {
-        ...prev[section], // Mantiene el resto de los valores dentro de la sección
-        [name]: type === "checkbox" ? checked : value, // Si es checkbox usa checked, si no usa value
+        ...(typeof prev[section] === 'object' ? prev[section] : {}), // Keep the rest of the values within the section
+        [name]: type === "checkbox" ? checked : value, // Use checked for checkbox, value otherwise
       },
     }));
   };
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    console.log("Datos del formulario:", formData);
+    console.log("Form data:", formData);
   };
 
-  // Función que determina el estado de una sección
+  // Function to determine section status
   const getSectionStatus = (
     sectionKey: keyof typeof formData,
     fields: (keyof (typeof formData)[typeof sectionKey])[]
   ): string => {
-    // 💡 Asegurar que TypeScript reconoce que retorna un string
     const section = formData[sectionKey];
     const values = fields.map((field) => section[field] as string | null);
 
@@ -117,167 +118,130 @@ export default function RegistrationForms() {
 
   return (
     <div className="w-full max-w-7xl mx-auto p-4 border rounded-lg shadow-lg bg-white text-slate-900">
-      <h2 className="text-2xl font-bold text-center mb-2">Formulario</h2>
+      <h2 className="text-2xl font-bold text-center mb-2">Form</h2>
 
-      <form onSubmit={handleSubmit} className=" h-[70vh] overflow-y-auto">
+      <form onSubmit={handleSubmit} className="h-[70vh] overflow-y-auto">
         <div className="flex-1 overflow-y-auto p-2">
-          {/* Sección 1 */}
+          {/* Sections */}
           <Section
-            title="I : Datos Personales"
+            title="I: Personal Data"
             fields={[
-              "nombre",
-              "identificacion",
-              "ciudadNacimiento",
-              "fechaNacimiento",
-              "edad",
-              "escolaridad",
-              "estadoCivil",
-              "direccion",
-              "telefono",
+              "name",
+              "identification",
+              "birthCity",
+              "birthDate",
+              "age",
+              "education",
+              "maritalStatus",
+              "address",
+              "phone",
               "eps",
               "arl",
             ]}
             formData={formData}
             handleChange={handleChange}
-            sectionKey="datosPersonales"
+            sectionKey="personalData"
             getSectionStatus={getSectionStatus}
           />
-
-          {/* Sección 2 */}
           <Section
-            title="II : Habitos"
+            title="II: Habits"
             fields={[
-              "tabaquismo",
-              "exfumador",
-              "cigarrillosDia",
-              "anosConsumo",
-              "licor",
-              "frecuenciaLicor",
-              "sustancias",
-              "deporte",
-              "frecuenciaDeporte",
+              "smoking",
+              "exSmoker",
+              "cigarettesPerDay",
+              "yearsOfConsumption",
+              "alcohol",
+              "alcoholFrequency",
+              "substances",
+              "sports",
+              "sportsFrequency",
             ]}
             formData={formData}
             handleChange={handleChange}
-            sectionKey="habitos"
+            sectionKey="habits"
             getSectionStatus={getSectionStatus}
           />
-
-          {/* Sección 3 */}
           <Section
-            title="III : Antedecentes Personales"
+            title="III: Personal History"
             fields={[
-              "patologicos",
-              "hospitalarios",
-              "quirurgicos",
-              "traumaticos",
-              "medicamentos",
-              "toxicos",
-              "alergicos",
-              "otros",
+              "pathological",
+              "hospitalizations",
+              "surgeries",
+              "trauma",
+              "medications",
+              "toxic",
+              "allergic",
+              "others",
             ]}
             formData={formData}
             handleChange={handleChange}
-            sectionKey="antecedentesPersonales"
+            sectionKey="personalHistory"
             getSectionStatus={getSectionStatus}
           />
-
-          {/* Sección 4 para mujeres */}
-
           <Section
-            title="IV : Antecedentes Gineco-Obstetricos"
+            title="IV: Gynecological-Obstetric History"
             fields={[
-              "menarca",
-              "ciclos",
+              "menarche",
+              "cycles",
               "g",
               "p",
               "a",
               "v",
               "fum",
-              "planifica",
-              "metodoPlanificacion",
-              "citologia",
+              "contraception",
+              "contraceptionMethod",
+              "cytology",
             ]}
             formData={formData}
             handleChange={handleChange}
-            sectionKey="antecedentesGinecoObstetricos"
+            sectionKey="gynecologicalObstetricHistory"
             getSectionStatus={getSectionStatus}
           />
-          {/* Sección 5 */}
           <Section
-            title="V : Antecedentes Familiares"
+            title="V: Family History"
             fields={[
-              "metabolicos",
-              "cardiopatia",
-              "htaPadre",
+              "metabolic",
+              "cardiopathy",
+              "htaFather",
               "cancer",
-              "otroAntecedente",
+              "otherHistory",
             ]}
             formData={formData}
             handleChange={handleChange}
-            sectionKey="antecedentesFamiliares"
+            sectionKey="familyHistory"
             getSectionStatus={getSectionStatus}
           />
-
-          <details className="mb-2 border-b pb-2">
-            <summary className="cursor-pointer text-lg font-medium bg-gray-100 p-3 rounded-lg hover:bg-gray-200">
-              VI : Informacion ocupacional
-            </summary>
-            <div className="p-3"></div>
-          </details>
-
-          <details className="mb-2 border-b pb-2">
-            <summary className="cursor-pointer text-lg font-medium bg-gray-100 p-3 rounded-lg hover:bg-gray-200">
-              VII : Examen fisico
-            </summary>
-            <div></div>
-          </details>
-
-          <details className="mb-2 border-b pb-2">
-            <summary className="cursor-pointer text-lg font-medium bg-gray-100 p-3 rounded-lg hover:bg-gray-200">
-              VIII : Diagnosticos
-            </summary>
-            <div className="p-3"></div>
-          </details>
-
-          {/* Sección 9 */}
           <Section
-            title="IX : Recomendaciones"
-            fields={["recomendaciones"]}
+            title="IX: Recommendations"
+            fields={["recommendations"]}
             formData={formData}
             handleChange={handleChange}
-            sectionKey="evaluacion"
+            sectionKey="evaluation"
             getSectionStatus={getSectionStatus}
           />
-
-          {/* Sección 10 */}
           <Section
-            title="X : Aptitud Laboral"
-            fields={["aptitudLaboral"]}
+            title="X: Work Aptitude"
+            fields={["workAptitude"]}
             formData={formData}
             handleChange={handleChange}
-            sectionKey="evaluacion"
+            sectionKey="evaluation"
             getSectionStatus={getSectionStatus}
           />
-
-          {/* Sección 11 */}
           <Section
-            title="XI : Restricciones"
-            fields={["restricciones"]}
+            title="XI: Restrictions"
+            fields={["restrictions"]}
             formData={formData}
             handleChange={handleChange}
-            sectionKey="evaluacion"
+            sectionKey="evaluation"
             getSectionStatus={getSectionStatus}
           />
         </div>
-
-        {/* Botón Enviar */}
         <div className="p-4 bg-white border-t shadow-lg sticky bottom-0">
           <button
             type="submit"
             className="w-full py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
           >
-            Enviar
+            Guardar Datos
           </button>
         </div>
       </form>

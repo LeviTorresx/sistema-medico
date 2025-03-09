@@ -1,242 +1,169 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
 
-interface patientState {
+export interface PatientState {
   id: number;
-  datosPersonales: {
-    nombre: string;
-    identificacion: string;
-    ciudadNacimiento: string;
-    fechaNacimiento: string;
-    edad: string;
-    escolaridad: string;
-    estadoCivil: string;
-    direccion: string;
-    telefono: string;
-    eps: string;
-    arl: string;
+  personalData: {
+    name: string;
+    identification: string;
+    birthCity: string;
+    birthDate: string;
+    age: string;
+    education: string;
+    maritalStatus: string;
+    address: string;
+    phone: string;
+    healthInsurance: string;
+    occupationalRiskInsurance: string;
   };
-  habitos: {
-    tabaquismo: boolean;
-    exfumador: boolean;
-    cigarrillosDia: string;
-    anosConsumo: string;
-    licor: boolean;
-    frecuenciaLicor: string;
-    sustancias: boolean;
-    deporte: boolean;
-    frecuenciaDeporte: string;
+  habits: {
+    smoking: boolean;
+    exSmoker: boolean;
+    cigarettesPerDay: string;
+    yearsOfConsumption: string;
+    alcohol: boolean;
+    alcoholFrequency: string;
+    substances: boolean;
+    sports: boolean;
+    sportsFrequency: string;
   };
-  antecedentesPersonales: {
-    patologicos: string;
-    hospitalarios: string;
-    quirurgicos: string;
-    traumaticos: string;
-    medicamentos: string;
-    toxicos: string;
-    alergicos: string;
-    otros: string;
+  personalHistory: {
+    pathological: string;
+    hospitalizations: string;
+    surgeries: string;
+    traumatic: string;
+    medications: string;
+    toxic: string;
+    allergies: string;
+    others: string;
   };
-  antecedentesFamiliares: {
-    metabolicos: boolean;
-    cardiopatia: boolean;
-    htaPadre: boolean;
+  familyHistory: {
+    metabolic: boolean;
+    heartDisease: boolean;
+    fatherHypertension: boolean;
     cancer: boolean;
-    otroAntecedente: string;
+    otherHistory: string;
   };
-  antecedentesGinecoObstetricos: {
-    menarca: string;
-    ciclos: string;
+  gynecologicalObstetricHistory: {
+    menarche: string;
+    cycles: string;
     g: string;
     p: string;
     a: string;
     v: string;
-    fum: string;
-    planifica: boolean;
-    metodoPlanificacion: string;
-    citologia: string;
+    lastMenstrualPeriod: string;
+    usesContraception: boolean;
+    contraceptionMethod: string;
+    papSmear: string;
   };
-  antecedentesLaborales: {
-    empresa: string;
-    cargo: string;
-    tiempo: string;
-    riesgos: {
-      fisico: boolean;
-      mecanico: boolean;
-      ergonomico: boolean;
-      psicosocial: boolean;
-      biologico: boolean;
+  workHistory: {
+    company: string;
+    jobTitle: string;
+    workDuration: string;
+    risks: {
+      physical: boolean;
+      mechanical: boolean;
+      ergonomic: boolean;
+      psychosocial: boolean;
+      biological: boolean;
     };
-    accidenteTrabajo: boolean;
-    enfermedadLaboral: boolean;
+    workAccident: boolean;
+    occupationalDisease: boolean;
   };
-  evaluacion: {
-    diagnosticos: string[];
-    recomendaciones: string;
-    aptitudLaboral: string;
-    restricciones: string;
+  evaluation: {
+    diagnoses: string[];
+    recommendations: string;
+    workAptitude: string;
+    restrictions: string;
   };
 }
 
-const initialState: patientState[] = [
-  {
-    id: 1,
-    datosPersonales: {
-      nombre: "Juan Pérez",
-      identificacion: "12345678",
-      ciudadNacimiento: "Bogotá",
-      fechaNacimiento: "1990-05-15",
-      edad: "33",
-      escolaridad: "Universitaria",
-      estadoCivil: "Casado",
-      direccion: "Calle 123 #45-67",
-      telefono: "3101234567",
-      eps: "Sura",
-      arl: "Colpatria",
-    },
-    habitos: {
-      tabaquismo: false,
-      exfumador: true,
-      cigarrillosDia: "0",
-      anosConsumo: "5",
-      licor: true,
-      frecuenciaLicor: "Ocasional",
-      sustancias: false,
-      deporte: true,
-      frecuenciaDeporte: "3 veces por semana",
-    },
-    antecedentesPersonales: {
-      patologicos: "Hipertensión",
-      hospitalarios: "Ninguno",
-      quirurgicos: "Apendicectomía",
-      traumaticos: "Fractura de tobillo",
-      medicamentos: "Losartán",
-      toxicos: "Ninguno",
-      alergicos: "Polen",
-      otros: "",
-    },
-    antecedentesFamiliares: {
-      metabolicos: true,
-      cardiopatia: false,
-      htaPadre: true,
-      cancer: false,
-      otroAntecedente: "",
-    },
-    antecedentesGinecoObstetricos: {
-      menarca: "",
-      ciclos: "",
-      g: "",
-      p: "",
-      a: "",
-      v: "",
-      fum: "",
-      planifica: false,
-      metodoPlanificacion: "",
-      citologia: "",
-    },
-    antecedentesLaborales: {
-      empresa: "Empresa ABC",
-      cargo: "Ingeniero",
-      tiempo: "5 años",
-      riesgos: {
-        fisico: true,
-        mecanico: false,
-        ergonomico: true,
-        psicosocial: false,
-        biologico: false,
-      },
-      accidenteTrabajo: false,
-      enfermedadLaboral: false,
-    },
-    evaluacion: {
-      diagnosticos: ["Hipertensión controlada"],
-      recomendaciones: "Control médico anual",
-      aptitudLaboral: "Apto",
-      restricciones: "",
-    },
-  },
-  {
-    id: 2,
-    datosPersonales: {
-      nombre: "María Gómez",
-      identificacion: "87654321",
-      ciudadNacimiento: "Medellín",
-      fechaNacimiento: "1985-10-20",
-      edad: "38",
-      escolaridad: "Secundaria",
-      estadoCivil: "Soltera",
-      direccion: "Carrera 10 #20-30",
-      telefono: "3157654321",
-      eps: "Nueva EPS",
-      arl: "Sura",
-    },
-    habitos: {
-      tabaquismo: false,
-      exfumador: false,
-      cigarrillosDia: "0",
-      anosConsumo: "0",
-      licor: true,
-      frecuenciaLicor: "Frecuente",
-      sustancias: false,
-      deporte: false,
-      frecuenciaDeporte: "",
-    },
-    antecedentesPersonales: {
-      patologicos: "Asma",
-      hospitalarios: "Hospitalización por crisis asmática",
-      quirurgicos: "Ninguno",
-      traumaticos: "Ninguno",
-      medicamentos: "Salbutamol",
-      toxicos: "Ninguno",
-      alergicos: "Ácaros",
-      otros: "",
-    },
-    antecedentesFamiliares: {
-      metabolicos: false,
-      cardiopatia: false,
-      htaPadre: false,
-      cancer: true,
-      otroAntecedente: "Cáncer de mama en madre",
-    },
-    antecedentesGinecoObstetricos: {
-      menarca: "12",
-      ciclos: "Regulares",
-      g: "1",
-      p: "1",
-      a: "0",
-      v: "1",
-      fum: "2024-01-10",
-      planifica: true,
-      metodoPlanificacion: "Implante subdérmico",
-      citologia: "Normal",
-    },
-    antecedentesLaborales: {
-      empresa: "Panadería La Estrella",
-      cargo: "Cajera",
-      tiempo: "3 años",
-      riesgos: {
-        fisico: false,
-        mecanico: false,
-        ergonomico: false,
-        psicosocial: true,
-        biologico: false,
-      },
-      accidenteTrabajo: false,
-      enfermedadLaboral: false,
-    },
-    evaluacion: {
-      diagnosticos: ["Asma leve"],
-      recomendaciones: "Evitar alérgenos, control con neumólogo",
-      aptitudLaboral: "Apto con restricciones",
-      restricciones: "Evitar exposición a polvo",
-    },
-  },
-];
+interface PatientsState {
+  data: PatientState[];
+  loading: boolean;
+  error: string | null;
+}
+
+const initialState: PatientsState = {
+  data: [],
+  loading: false,
+  error: null,
+};
+
+export const fetchPatients = createAsyncThunk(
+  "patients/fetchPatients",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(
+        "http://localhost:8080/api/patients/getAll"
+      );
+      return response.data;
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        return rejectWithValue(error.response?.data || error.message);
+      }
+      return rejectWithValue("An unknown error occurred");
+    }
+  }
+);
+
+export const addPatient = createAsyncThunk(
+  "patients/addPatient",
+  async (patientData: Omit<PatientState, "id">, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:8080/api/patients/add_patient",
+        patientData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      return response.data; // Devuelve el paciente agregado
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        return rejectWithValue(error.response?.data || error.message);
+      }
+      return rejectWithValue("An unknown error occurred");
+    }
+  }
+);
+
 
 const patientSlice = createSlice({
-  name: "patient",
+  name: "patients",
   initialState,
   reducers: {},
+  extraReducers: (builder) => {
+    builder
+    // Fetch patients
+      .addCase(fetchPatients.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchPatients.fulfilled, (state, action) => {
+        state.loading = false;
+        state.data = action.payload;
+      })
+      .addCase(fetchPatients.rejected, (state, action) => {
+        state.loading = false;
+        state.error = typeof action.payload === "string" ? action.payload : "Error fetching patients";
+      })
+        // Agregar casos para el thunk addPatient
+      .addCase(addPatient.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(addPatient.fulfilled, (state, action) => {
+        state.loading = false;
+        state.data.push(action.payload); // Agregar paciente al estado
+      })
+      .addCase(addPatient.rejected, (state, action) => {
+        state.loading = false;
+        state.error = typeof action.payload === "string" ? action.payload : "Error adding patient";
+      });
+  },
 });
 
-export const {} = patientSlice.actions;
 export default patientSlice.reducer;

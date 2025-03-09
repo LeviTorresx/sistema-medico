@@ -1,17 +1,29 @@
 "use client";
-import { useSelector } from "react-redux";
+import { useEffect, useState, FormEvent, ChangeEvent } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { useRouter } from "next/navigation"; // Importar useRouter para redireccionar
+import { RootState, AppDispatch } from "../../redux/store";
 import PrivateLayout from "../PrivateLayout";
 import SearchBar from "./components/SearchBar";
-import { FormEvent, useState, ChangeEvent } from "react";
-import { RootState } from "../../redux/store";
+import { fetchPatients, PatientState } from "@/app/redux/slices/patientSlice";
+import PatientCard from "./components/PatientCard";
 
 export default function Search() {
+  const dispatch = useDispatch<AppDispatch>();
+  const router = useRouter(); // Instancia del router para navegación
+
   const [query, setQuery] = useState("");
   const [error, setError] = useState("");
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [patient, setPatient] = useState<any | null>(null);
+  const [patient, setPatient] = useState<PatientState | null>(null);
+  const [showAddButton, setShowAddButton] = useState(false); // Nuevo estado para mostrar botón
 
-  const patients = useSelector((state: RootState) => state.patients);
+  const { data: patients, loading, error: fetchError } = useSelector(
+    (state: RootState) => state.patients
+  );
+
+  useEffect(() => {
+    dispatch(fetchPatients()); // Llamar al thunk cuando el componente se monta
+  }, [dispatch]);
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -31,15 +43,15 @@ export default function Search() {
     setError(""); // Limpiar error si pasa la validación
 
     const foundPatient = patients.find(
-      (p) => p.datosPersonales.identificacion === query
+      (p) => p.personalData.identification === query
     );
 
     if (foundPatient) {
       setPatient(foundPatient); // Guardar paciente encontrado
-      alert(`Paciente encontrado: ${foundPatient.datosPersonales.nombre}`);
+      setShowAddButton(false); // Ocultar botón si lo encuentra
     } else {
       setPatient(null);
-      alert(`Paciente no encontrado con cédula: ${query}`);
+      setShowAddButton(true); // Mostrar botón para agregar paciente
     }
 
     setQuery(""); // Limpiar búsqueda
@@ -58,58 +70,24 @@ export default function Search() {
           clearQuery={() => setQuery("")}
           error={error}
         />
-        {patient && (
-          <div>
-            <h4 className="text-blue-900 font-bold text-lg">
-              Información del paciente
-            </h4>
-            <div className="flex flex-col gap-2">
-              <p>
-                <span className="font-semibold">Nombre:</span>{" "}
-                {patient.datosPersonales.nombre}
-              </p>
-              <p>
-                <span className="font-semibold">Identificación:</span>{" "}
-                {patient.datosPersonales.identificacion}
-              </p>
-              <p>
-                <span className="font-semibold">Ciudad Nacimiento:</span>{" "}
-                {patient.datosPersonales.ciudadNacimiento}
-              </p>
-              <p>
-                <span className="font-semibold">Fecha Nacimiento:</span>{" "}
-                {patient.datosPersonales.fechaNacimiento}
-              </p>
-              <p>
-                <span className="font-semibold">Edad:</span>{" "}
-                {patient.datosPersonales.edad}
-              </p>
-              <p>
-                <span className="font-semibold">Escolaridad:</span>{" "}
-                {patient.datosPersonales.escolaridad}
-              </p>
-              <p>
-                <span className="font-semibold">Estado Civil:</span>{" "}
-                {patient.datosPersonales.estadoCivil}
-              </p>
-              <p>
-                <span className="font-semibold">Dirección:</span>{" "}
-                {patient.datosPersonales.direccion}
-              </p>
-              <p>
-                <span className="font-semibold">Teléfono:</span>{" "}
-                {patient.datosPersonales.telefono}
-              </p>
-              <p>
-                <span className="font-semibold">EPS:</span>{" "}
-                {patient.datosPersonales.eps}
-              </p>
-              <p>
-                <span className="font-semibold">ARL:</span>{" "}
-                {patient.datosPersonales.arl}
-              </p>
+
+        {loading && <p>Cargando pacientes...</p>}
+        {fetchError && <p className="text-red-500">{fetchError}</p>}
+
+        {patient ? (
+          <PatientCard personalData={patient.personalData}/>
+        ) : (
+          showAddButton && (
+            <div className="flex flex-col items-center justify-center bg-white shadow-lg rounded-xl p-6 w-full max-w-sm border border-red-300">
+              <p className="text-red-600 font-semibold text-lg">Paciente no encontrado.</p>
+              <button
+                onClick={() => router.push("/private/forms")}
+                className="mt-4 bg-gradient-to-r from-blue-500 to-blue-700 text-white px-6 py-3 rounded-full font-bold shadow-md hover:from-blue-600 hover:to-blue-800 transition-transform transform hover:scale-105 duration-300"
+              >
+                + Agregar Paciente
+              </button>
             </div>
-          </div>
+          )
         )}
       </div>
     </PrivateLayout>
