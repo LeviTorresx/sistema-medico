@@ -17,9 +17,11 @@ export default function Search() {
   const [patient, setPatient] = useState<PatientState | null>(null);
   const [showAddButton, setShowAddButton] = useState(false); // Nuevo estado para mostrar botón
 
-  const { data: patients, loading, error: fetchError } = useSelector(
-    (state: RootState) => state.patients
-  );
+  const {
+    data: patients,
+    loading,
+    error: fetchError,
+  } = useSelector((state: RootState) => state.patients);
 
   useEffect(() => {
     dispatch(fetchPatients()); // Llamar al thunk cuando el componente se monta
@@ -59,10 +61,11 @@ export default function Search() {
 
   return (
     <PrivateLayout title="Buscar">
-      <div className="flex flex-col items-center justify-center w-full h-full gap-8">
-        <h3 className="text-blue-900 font-bold text-lg">
+      <div className="flex flex-col items-center justify-center h-full gap-6 p-8">
+        <h3 className="text-2xl text-blue-900 font-extrabold tracking-wide">
           Buscar paciente por cédula
         </h3>
+
         <SearchBar
           handleSearch={handleSearch}
           query={query}
@@ -71,18 +74,22 @@ export default function Search() {
           error={error}
         />
 
-        {loading && <p>Cargando pacientes...</p>}
-        {fetchError && <p className="text-red-500">{fetchError}</p>}
+        {loading && (
+          <p className="text-gray-700 text-lg">Cargando pacientes...</p>
+        )}
+        {fetchError && <p className="text-red-500 text-lg">{fetchError}</p>}
 
         {patient ? (
-          <PatientCard personalData={patient.personalData}/>
+          <PatientCard personalData={patient.personalData} />
         ) : (
           showAddButton && (
-            <div className="flex flex-col items-center justify-center bg-white shadow-lg rounded-xl p-6 w-full max-w-sm border border-red-300">
-              <p className="text-red-600 font-semibold text-lg">Paciente no encontrado.</p>
+            <div className="flex flex-col items-center justify-center bg-red-50 border border-red-400 shadow-lg rounded-xl p-6 w-full max-w-sm">
+              <p className="text-red-700 font-semibold text-lg flex items-center gap-2">
+                ⚠️ Paciente no encontrado.
+              </p>
               <button
                 onClick={() => router.push("/private/forms")}
-                className="mt-4 bg-gradient-to-r from-blue-500 to-blue-700 text-white px-6 py-3 rounded-full font-bold shadow-md hover:from-blue-600 hover:to-blue-800 transition-transform transform hover:scale-105 duration-300"
+                className="mt-4 bg-gradient-to-r from-green-500 to-green-700 text-white px-6 py-3 rounded-full font-bold shadow-lg hover:from-green-600 hover:to-green-800 transition-transform transform hover:scale-105 duration-300"
               >
                 + Agregar Paciente
               </button>

@@ -130,6 +130,29 @@ export const addPatient = createAsyncThunk(
   }
 );
 
+export const editPatient = createAsyncThunk(
+  "patients/editPatient",
+  async ({ id, patientData }: { id: number; patientData: Omit<PatientState, "id"> }, { rejectWithValue }) => {
+    try {
+      const response = await axios.put(
+        `http://localhost:8080/api/patients/${id}`,
+        patientData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      return response.data; // Devuelve el paciente actualizado
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        return rejectWithValue(error.response?.data || error.message);
+      }
+      return rejectWithValue("An unknown error occurred");
+    }
+  }
+);
+
 
 const patientSlice = createSlice({
   name: "patients",
@@ -162,7 +185,23 @@ const patientSlice = createSlice({
       .addCase(addPatient.rejected, (state, action) => {
         state.loading = false;
         state.error = typeof action.payload === "string" ? action.payload : "Error adding patient";
-      });
+      })
+    // Agregar casos para el thunk editPatient
+    .addCase(editPatient.pending, (state) => {
+      state.loading = true;
+      state.error = null;
+    })
+    .addCase(editPatient.fulfilled, (state, action) => {
+      state.loading = false;
+      const index = state.data.findIndex((p) => p.id === action.payload.id);
+      if (index !== -1) {
+        state.data[index] = action.payload; // Actualizar paciente en el estado
+      }
+    })
+    .addCase(editPatient.rejected, (state, action) => {
+      state.loading = false;
+      state.error = typeof action.payload === "string" ? action.payload : "Error updating patient";
+    });
   },
 });
 

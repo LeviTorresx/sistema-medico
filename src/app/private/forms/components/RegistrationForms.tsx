@@ -1,7 +1,9 @@
 "use client";
-import { FormEvent, useState, ChangeEvent } from "react";
+import {useState, ChangeEvent } from "react";
 import Section from "./Section";
-import { PatientState } from "@/app/redux/slices/patientSlice";
+import { PatientState, addPatient } from "@/app/redux/slices/patientSlice";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/app/redux/store";
 export default function RegistrationForms() {
   // State to store form data
   const [formData, setFormData] = useState<PatientState>({
@@ -81,6 +83,7 @@ export default function RegistrationForms() {
       restrictions: "",
     },
   });
+ 
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value, dataset, type, checked } = e.target;
@@ -95,10 +98,20 @@ export default function RegistrationForms() {
     }));
   };
 
-  const handleSubmit = (e: FormEvent) => {
+  const dispatch = useDispatch<AppDispatch>();
+
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form data:", formData);
-  };
+    try {
+      await dispatch(addPatient(formData)).unwrap();
+      alert("Paciente agregado correctamente");
+      window.location.href = "/private/dashboard";
+    } catch (error) {
+      console.error("Error al agregar paciente:", error);
+      alert("Hubo un error al agregar el paciente");
+    }
+  }
 
   // Function to determine section status
   const getSectionStatus = (
@@ -135,8 +148,8 @@ export default function RegistrationForms() {
               "maritalStatus",
               "address",
               "phone",
-              "eps",
-              "arl",
+              "healthInsurance",
+              "occupationalRiskInsurance",
             ]}
             formData={formData}
             handleChange={handleChange}
@@ -170,8 +183,8 @@ export default function RegistrationForms() {
               "trauma",
               "medications",
               "toxic",
-              "allergic",
-              "others",
+              "allergies",
+              "other",
             ]}
             formData={formData}
             handleChange={handleChange}
@@ -187,10 +200,10 @@ export default function RegistrationForms() {
               "p",
               "a",
               "v",
-              "fum",
-              "contraception",
-              "contraceptionMethod",
-              "cytology",
+              "lastMenstrualPeriod",
+              "usesContraception",
+              "usesContraception",
+              "papSmear",
             ]}
             formData={formData}
             handleChange={handleChange}
@@ -200,9 +213,9 @@ export default function RegistrationForms() {
           <Section
             title="V: Family History"
             fields={[
-              "metabolic",
-              "cardiopathy",
-              "htaFather",
+              "metabolicDiseases",
+              "heartDisease",
+              "hypertensionFather",
               "cancer",
               "otherHistory",
             ]}

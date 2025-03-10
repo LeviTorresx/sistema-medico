@@ -5,10 +5,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../../redux/store";
 import { fetchPatients } from "../../../../redux/slices/patientSlice";
 import { Eye } from "lucide-react";
-import "./patientTable.css";
 
 export default function PatientTable() {
-
   const dispatch = useDispatch<AppDispatch>();
   
   const { data: patients, loading, error } = useSelector(
@@ -19,52 +17,50 @@ export default function PatientTable() {
     dispatch(fetchPatients());
   }, [dispatch]);
 
-  if (loading) return <p>Cargando pacientes...</p>;
-  if (error) return <p>Error al cargar pacientes: {error}</p>;
+  if (loading) return <p className="text-center text-lg text-gray-700">Cargando pacientes...</p>;
+  if (error) return <p className="text-center text-red-500">Error al cargar pacientes: {error}</p>;
 
   return (
-    <div className="container">
-      <h2 className="titleTable">Lista de Pacientes</h2>
-      <div className="containerTableInfo">
-        <table>
-          <thead className="encabezadoTable">
-            <tr className="cleanBox">
-              <th>Nombre</th>
-              <th>Identificación</th>
-              <th>Ciudad Nacimiento</th>
-              <th>Fecha Nacimiento</th>
-              <th>Edad</th>
-              <th>Escolaridad</th>
-              <th>Estado Civil</th>
-              <th>Dirección</th>
-              <th>Teléfono</th>
-              <th>EPS</th>
-              <th>ARL</th>
-              <th>Acciones</th>
+    <div className="p-6">
+      <h2 className="text-2xl font-bold text-gray-800 mb-4 text-center">Lista de Pacientes</h2>
+      <div className="overflow-x-auto bg-white shadow-lg rounded-lg p-4">
+        <table className="w-full border-collapse">
+          <thead className="bg-blue-700 text-white">
+            <tr>
+              <th className="p-3 text-left">Nombre</th>
+              <th className="p-3 text-left">Identificación</th>
+              <th className="p-3 text-left">Ciudad Nacimiento</th>
+              <th className="p-3 text-left">Fecha Nacimiento</th>
+              <th className="p-3 text-left">Edad</th>
+              <th className="p-3 text-left">Escolaridad</th>
+              <th className="p-3 text-left">Estado Civil</th>
+              <th className="p-3 text-left">Dirección</th>
+              <th className="p-3 text-left">Teléfono</th>
+              <th className="p-3 text-left">EPS</th>
+              <th className="p-3 text-left">ARL</th>
+              <th className="p-3 text-left">Acciones</th>
             </tr>
           </thead>
-          <tbody className="bodyTable">
+          <tbody className="divide-y divide-gray-300">
             {patients.map((patient, index) => (
-              <tr key={index}>
-                <td>{patient.personalData.name}</td>
-                <td>{patient.personalData.identification}</td>
-                <td>{patient.personalData.birthCity}</td>
-                <td>{patient.personalData.birthDate}</td>
-                <td>{patient.personalData.age}</td>
-                <td>{patient.personalData.education}</td>
-                <td>{patient.personalData.maritalStatus}</td>
-                <td>{patient.personalData.address}</td>
-                <td>{patient.personalData.phone}</td>
-                <td>{patient.personalData.healthInsurance}</td>
-                <td>{patient.personalData.occupationalRiskInsurance}</td>
-                <td>
+              <tr key={index} className="hover:bg-gray-100">
+                <td className="p-3">{patient.personalData.name}</td>
+                <td className="p-3">{patient.personalData.identification}</td>
+                <td className="p-3">{patient.personalData.birthCity}</td>
+                <td className="p-3">{patient.personalData.birthDate}</td>
+                <td className="p-3">{patient.personalData.age}</td>
+                <td className="p-3">{patient.personalData.education}</td>
+                <td className="p-3">{patient.personalData.maritalStatus}</td>
+                <td className="p-3">{patient.personalData.address}</td>
+                <td className="p-3">{patient.personalData.phone}</td>
+                <td className="p-3">{patient.personalData.healthInsurance}</td>
+                <td className="p-3">{patient.personalData.occupationalRiskInsurance}</td>
+                <td className="p-3">
                   <button
-                    className="botonVer"
-                    onClick={() =>
-                      alert(`Ver más sobre ${patient.personalData.name}`)
-                    }
+                    className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700 transition"
+                    onClick={() => alert(`Ver más sobre ${patient.personalData.name}`)}
                   >
-                    <Eye className="icon" /> <p>Ver más</p>
+                    <Eye className="w-5 h-5" /> <span>Ver más</span>
                   </button>
                 </td>
               </tr>

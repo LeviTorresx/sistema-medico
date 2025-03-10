@@ -13,17 +13,16 @@ export default function Dashboard() {
 
   return (
     <PrivateLayout>
-      <div>
-        <h1 className="text-2xl text-center">Dashboard</h1>
-        <div className="flex justify-center mt-4">
-          <button
-            onClick={() => handleRedirect("/private/search")}
-            className="bg-blue-500 text-white mx-2 px-3 py-1 rounded hover:bg-blue-600 transition"
-          >
-            Buscar paciente
-          </button>
-        </div>
+      <div className="mt-8 bg-white shadow-md rounded-xl p-6">
         <PatientTable />
+      </div>
+      <div className="flex justify-center mt-6">
+        <button
+          onClick={() => handleRedirect("/private/search")}
+          className="bg-blue-600 text-white px-5 py-2 rounded-lg shadow-md hover:bg-blue-700 hover:scale-105 transition-transform"
+        >
+          Buscar paciente
+        </button>
       </div>
     </PrivateLayout>
   );

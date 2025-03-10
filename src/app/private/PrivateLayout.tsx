@@ -13,8 +13,7 @@ export default function PrivateLayout({
 }) {
   const { getUserInfo, logout } = useAuth();
   const userInfo = getUserInfo();
-  const userName = userInfo?.sub || "Invitado"; // Si no hay nombre, muestra "Invitado"
-  console.log(userInfo);
+  const userName = userInfo?.sub || ""; // Si no hay nombre, muestra "Invitado"
 
   return (
     <>
@@ -23,20 +22,20 @@ export default function PrivateLayout({
       </Head>
 
       {/* Navbar Mejorado */}
-      <nav className="bg-gray-900 text-white p-4 shadow-md">
+      <nav className="bg-gradient-to-r from-blue-700 to-blue-900 text-white p-4 shadow-lg">
         <div className="container mx-auto flex justify-between items-center">
           {/* Logo */}
-          <h1 className="text-xl font-bold">Sistema Médico</h1>
+          <h1 className="text-2xl font-bold tracking-wide">Sistema Médico</h1>
 
           {/* Menú */}
-          <ul className="flex space-x-6">
+          <ul className="flex space-x-6 text-lg font-medium">
             <li>
-              <Link href="/private/dashboard" className="hover:underline">
+              <Link href="/private/dashboard" className="hover:text-gray-300 transition">
                 Dashboard
               </Link>
             </li>
             <li>
-              <Link href="/private/profile" className="hover:underline">
+              <Link href="/private/profile" className="hover:text-gray-300 transition">
                 Perfil
               </Link>
             </li>
@@ -44,9 +43,9 @@ export default function PrivateLayout({
 
           {/* Usuario + Logout */}
           <div className="flex items-center space-x-4">
-            <span className="font-medium">{userName}</span>
+            <span className="font-semibold text-lg">{userName}</span>
             <button
-              className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition"
+              className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-xl shadow-md transition-all duration-200"
               onClick={() => {
                 logout();
                 window.location.href = "/";
@@ -59,8 +58,10 @@ export default function PrivateLayout({
       </nav>
 
       {/* Contenido Principal */}
-      <main className="w-full flex-1 flex flex-col justify-center p-6">
-        {children}
+      <main className="w-full flex-1 flex flex-col justify-center items-center p-8 bg-gray-100 min-h-screen">
+        <div className="bg-white shadow-lg rounded-xl p-6 w-full">
+          {children}
+        </div>
       </main>
     </>
   );
