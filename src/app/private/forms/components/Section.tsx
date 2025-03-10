@@ -1,13 +1,18 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ChangeEvent, FC } from "react";
+
+interface FormData {
+  [section: string]: {
+    [field: string]: string | boolean;
+  };
+}
 
 interface SectionProps {
   title: string;
-  sectionKey: any;
+  sectionKey: string;
   fields: string[];
-  formData: any;
+  formData: FormData;
   handleChange: (event: ChangeEvent<HTMLInputElement>) => void;
-  getSectionStatus: (section: never, fields: never[]) => string;
+  getSectionStatus: (section: string, fields: string[]) => string;
 }
 
 const Section: FC<SectionProps> = ({
