@@ -1,5 +1,5 @@
 "use client";
-import {useState, ChangeEvent } from "react";
+import {useState, ChangeEvent, FormEvent } from "react";
 import Section from "./Section";
 import { PatientState, addPatient } from "@/app/redux/slices/patientSlice";
 import { useDispatch } from "react-redux";
@@ -101,7 +101,7 @@ export default function RegistrationForms() {
   const dispatch = useDispatch<AppDispatch>();
 
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e : FormEvent) => {
     e.preventDefault();
     try {
       await dispatch(addPatient(formData)).unwrap();
