@@ -1,5 +1,5 @@
 "use client";
-import {useState, ChangeEvent, FormEvent } from "react";
+import { useState, ChangeEvent, FormEvent } from "react";
 import Section from "./Section";
 import { PatientState, addPatient } from "@/app/redux/slices/patientSlice";
 import { useDispatch } from "react-redux";
@@ -83,7 +83,6 @@ export default function RegistrationForms() {
       restrictions: "",
     },
   });
- 
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value, dataset, type, checked } = e.target;
@@ -92,7 +91,7 @@ export default function RegistrationForms() {
     setFormData((prev) => ({
       ...prev,
       [section]: {
-        ...(typeof prev[section] === 'object' ? prev[section] : {}), // Keep the rest of the values within the section
+        ...(typeof prev[section] === "object" ? prev[section] : {}), // Keep the rest of the values within the section
         [name]: type === "checkbox" ? checked : value, // Use checked for checkbox, value otherwise
       },
     }));
@@ -100,8 +99,7 @@ export default function RegistrationForms() {
 
   const dispatch = useDispatch<AppDispatch>();
 
-
-  const handleSubmit = async (e : FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     try {
       await dispatch(addPatient(formData)).unwrap();
@@ -111,7 +109,7 @@ export default function RegistrationForms() {
       console.error("Error al agregar paciente:", error);
       alert("Hubo un error al agregar el paciente");
     }
-  }
+  };
 
   // Function to determine section status
   const getSectionStatus = (
