@@ -8,21 +8,33 @@ import { Eye } from "lucide-react";
 
 export default function PatientTable() {
   const dispatch = useDispatch<AppDispatch>();
-  
-  const { data: patients, loading, error } = useSelector(
-    (state: RootState) => state.patients
-  );
+
+  const {
+    data: patients,
+    loading,
+    error,
+  } = useSelector((state: RootState) => state.patients);
 
   useEffect(() => {
     dispatch(fetchPatients());
   }, [dispatch]);
 
-  if (loading) return <p className="text-center text-lg text-gray-700">Cargando pacientes...</p>;
-  if (error) return <p className="text-center text-red-500">Error al cargar pacientes: {error}</p>;
+  if (loading)
+    return (
+      <p className="text-center text-lg text-gray-700">Cargando pacientes...</p>
+    );
+  if (error)
+    return (
+      <p className="text-center text-red-500">
+        Error al cargar pacientes: {error}
+      </p>
+    );
 
   return (
     <div className="p-6">
-      <h2 className="text-2xl font-bold text-gray-800 mb-4 text-center">Lista de Pacientes</h2>
+      <h2 className="text-2xl font-bold text-gray-800 mb-4 text-center">
+        Lista de Pacientes
+      </h2>
       <div className="overflow-x-auto bg-white shadow-lg rounded-lg p-4">
         <table className="w-full border-collapse">
           <thead className="bg-blue-700 text-white">
@@ -54,11 +66,15 @@ export default function PatientTable() {
                 <td className="p-3">{patient.personalData.address}</td>
                 <td className="p-3">{patient.personalData.phone}</td>
                 <td className="p-3">{patient.personalData.healthInsurance}</td>
-                <td className="p-3">{patient.personalData.occupationalRiskInsurance}</td>
+                <td className="p-3">
+                  {patient.personalData.occupationalRiskInsurance}
+                </td>
                 <td className="p-3">
                   <button
                     className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700 transition"
-                    onClick={() => alert(`Ver más sobre ${patient.personalData.name}`)}
+                    onClick={() =>
+                      alert(`Ver más sobre ${patient.personalData.name}`)
+                    }
                   >
                     <Eye className="w-5 h-5" /> <span>Ver más</span>
                   </button>

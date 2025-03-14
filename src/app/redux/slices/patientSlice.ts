@@ -3,79 +3,95 @@ import axios from "axios";
 
 export interface PatientState {
   id: number;
-  personalData: {
-    name: string;
-    identification: string;
-    birthCity: string;
-    birthDate: string;
-    age: string;
-    education: string;
-    maritalStatus: string;
-    address: string;
-    phone: string;
-    healthInsurance: string;
-    occupationalRiskInsurance: string;
-  };
-  habits: {
-    smoking: boolean;
-    exSmoker: boolean;
-    cigarettesPerDay: string;
-    yearsOfConsumption: string;
-    alcohol: boolean;
-    alcoholFrequency: string;
-    substances: boolean;
-    sports: boolean;
-    sportsFrequency: string;
-  };
-  personalHistory: {
-    pathological: string;
-    hospitalizations: string;
-    surgeries: string;
-    traumatic: string;
-    medications: string;
-    toxic: string;
-    allergies: string;
-    others: string;
-  };
-  familyHistory: {
-    metabolic: boolean;
-    heartDisease: boolean;
-    fatherHypertension: boolean;
-    cancer: boolean;
-    otherHistory: string;
-  };
-  gynecologicalObstetricHistory: {
-    menarche: string;
-    cycles: string;
-    g: string;
-    p: string;
-    a: string;
-    v: string;
-    lastMenstrualPeriod: string;
-    usesContraception: boolean;
-    contraceptionMethod: string;
-    papSmear: string;
-  };
-  workHistory: {
-    company: string;
-    jobTitle: string;
-    workDuration: string;
-    risks: {
-      physical: boolean;
-      mechanical: boolean;
-      ergonomic: boolean;
-      psychosocial: boolean;
-      biological: boolean;
-    };
-    workAccident: boolean;
-    occupationalDisease: boolean;
-  };
-  evaluation: {
-    diagnoses: string[];
-    recommendations: string;
-    workAptitude: string;
-    restrictions: string;
-  };
+  personalData: PersonalData;
+  habits: Habits;
+  personalHistory: PersonalHistory;
+  familyHistory: FamilyHistory;
+  gynecologicalObstetricHistory: GynecologicalObstetricHistory;
+  workHistory: WorkHistory;
+  evaluation: Evaluation;
+}
+
+interface PersonalData {
+  name: string;
+  identification: string;
+  birthCity: string;
+  birthDate: "";
+  age: number;
+  education: string;
+  maritalStatus: string;
+  address: string;
+  phone: string;
+  healthInsurance: string;
+  occupationalRiskInsurance: string;
+}
+
+interface Habits {
+  smoking: boolean;
+  exSmoker: boolean;
+  cigarettesPerDay?: number; // Opcional si nunca ha fumado
+  yearsOfConsumption?: number; // Opcional si nunca ha fumado
+  alcohol: boolean;
+  alcoholFrequency?: string; // Ejemplo: "Diario", "Ocasional", "Nunca"
+  substances: boolean;
+  sports: boolean;
+  sportsFrequency?: string; // Ejemplo: "3 veces por semana", opcional si no practica deportes
+}
+
+interface PersonalHistory {
+  pathological: string;
+  hospitalizations: string;
+  surgeries: string;
+  traumatic: string;
+  medications: string;
+  toxic: string;
+  allergies: string;
+  others: string;
+}
+
+interface FamilyHistory {
+  metabolic: boolean;
+  heartDisease: boolean;
+  fatherHypertension: boolean;
+  cancer: boolean;
+  otherHistory: string;
+}
+
+interface GynecologicalObstetricHistory {
+  menarche: number; // Edad de la primera menstruación
+  cycles: string; // Regularidad del ciclo
+  g: number; // Gestaciones
+  p: number; // Partos
+  a: number; // Abortos
+  v: number; // Vivos
+  lastMenstrualPeriod: "";
+  usesContraception: boolean;
+  contraceptionMethod?: string; // Opcional si no usa anticonceptivos
+  papSmear: ""; // Fecha del último Papanicolaou
+}
+
+interface WorkHistory {
+  company: string;
+  jobTitle: string;
+  workDuration: string; // Ejemplo: "5 años", "2 meses"
+  risks: WorkRisks;
+  workAccident: boolean;
+  occupationalDisease: boolean;
+}
+
+interface WorkRisks {
+  physical: boolean;
+  mechanical: boolean;
+  ergonomic: boolean;
+  psychosocial: boolean;
+  biological: boolean;
+}
+
+interface Evaluation {
+  diagnoses: string[];
+  recommendations: string;
+  workAptitude: string;
+  restrictions: string;
 }
 
 interface PatientsState {
@@ -132,7 +148,10 @@ export const addPatient = createAsyncThunk(
 
 export const editPatient = createAsyncThunk(
   "patients/editPatient",
-  async ({ id, patientData }: { id: number; patientData: Omit<PatientState, "id"> }, { rejectWithValue }) => {
+  async (
+    { id, patientData }: { id: number; patientData: Omit<PatientState, "id"> },
+    { rejectWithValue }
+  ) => {
     try {
       const response = await axios.put(
         `http://localhost:8080/api/patients/${id}`,
@@ -153,14 +172,13 @@ export const editPatient = createAsyncThunk(
   }
 );
 
-
 const patientSlice = createSlice({
   name: "patients",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
-    // Fetch patients
+      // Fetch patients
       .addCase(fetchPatients.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -171,9 +189,12 @@ const patientSlice = createSlice({
       })
       .addCase(fetchPatients.rejected, (state, action) => {
         state.loading = false;
-        state.error = typeof action.payload === "string" ? action.payload : "Error fetching patients";
+        state.error =
+          typeof action.payload === "string"
+            ? action.payload
+            : "Error fetching patients";
       })
-        // Agregar casos para el thunk addPatient
+      // Agregar casos para el thunk addPatient
       .addCase(addPatient.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -184,24 +205,30 @@ const patientSlice = createSlice({
       })
       .addCase(addPatient.rejected, (state, action) => {
         state.loading = false;
-        state.error = typeof action.payload === "string" ? action.payload : "Error adding patient";
+        state.error =
+          typeof action.payload === "string"
+            ? action.payload
+            : "Error adding patient";
       })
-    // Agregar casos para el thunk editPatient
-    .addCase(editPatient.pending, (state) => {
-      state.loading = true;
-      state.error = null;
-    })
-    .addCase(editPatient.fulfilled, (state, action) => {
-      state.loading = false;
-      const index = state.data.findIndex((p) => p.id === action.payload.id);
-      if (index !== -1) {
-        state.data[index] = action.payload; // Actualizar paciente en el estado
-      }
-    })
-    .addCase(editPatient.rejected, (state, action) => {
-      state.loading = false;
-      state.error = typeof action.payload === "string" ? action.payload : "Error updating patient";
-    });
+      // Agregar casos para el thunk editPatient
+      .addCase(editPatient.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(editPatient.fulfilled, (state, action) => {
+        state.loading = false;
+        const index = state.data.findIndex((p) => p.id === action.payload.id);
+        if (index !== -1) {
+          state.data[index] = action.payload; // Actualizar paciente en el estado
+        }
+      })
+      .addCase(editPatient.rejected, (state, action) => {
+        state.loading = false;
+        state.error =
+          typeof action.payload === "string"
+            ? action.payload
+            : "Error updating patient";
+      });
   },
 });
 

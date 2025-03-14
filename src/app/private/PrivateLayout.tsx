@@ -2,8 +2,6 @@
 import Head from "next/head";
 import Link from "next/link";
 import { ReactNode } from "react";
-import useAuth from "../hooks/useAuth"; // Importa tu hook correctamente
-
 export default function PrivateLayout({
   children,
   title = "Mi App",
@@ -11,9 +9,6 @@ export default function PrivateLayout({
   children: ReactNode;
   title?: string;
 }) {
-  const { getUserInfo, logout } = useAuth();
-  const userInfo = getUserInfo();
-  const userName = userInfo?.sub || ""; // Si no hay nombre, muestra "Invitado"
 
   return (
     <>
@@ -43,11 +38,10 @@ export default function PrivateLayout({
 
           {/* Usuario + Logout */}
           <div className="flex items-center space-x-4">
-            <span className="font-semibold text-lg">{userName}</span>
+            
             <button
               className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-xl shadow-md transition-all duration-200"
               onClick={() => {
-                logout();
                 window.location.href = "/";
               }}
             >
