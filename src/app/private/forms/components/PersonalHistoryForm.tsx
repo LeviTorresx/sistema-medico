@@ -8,17 +8,7 @@ import {
   Biohazard,
   MoreHorizontal,
 } from "lucide-react";
-
-interface PersonalHistory {
-  pathological: string;
-  hospitalizations: string;
-  surgeries: string;
-  traumatic: string;
-  medications: string;
-  toxic: string;
-  allergies: string;
-  others: string;
-}
+import { PersonalHistory } from "@/app/redux/slices/patientSlice";
 
 interface PersonalHistoryFormProps {
   formData: { personalHistory: PersonalHistory };

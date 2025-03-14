@@ -6,13 +6,7 @@ import {
   MoreHorizontal,
 } from "lucide-react";
 
-interface FamilyHistory {
-  metabolic: boolean;
-  heartDisease: boolean;
-  fatherHypertension: boolean;
-  cancer: boolean;
-  otherHistory: string;
-}
+import { FamilyHistory } from "@/app/redux/slices/patientSlice";
 
 interface FamilyHistoryFormProps {
   formData: { familyHistory: FamilyHistory };

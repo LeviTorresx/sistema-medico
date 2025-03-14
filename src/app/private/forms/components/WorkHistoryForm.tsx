@@ -5,21 +5,7 @@ import {
   AlertTriangle,
   CheckCircle,
 } from "lucide-react";
-
-interface WorkHistory {
-  company: string;
-  jobTitle: string;
-  workDuration: string;
-  risks: {
-    physical: boolean;
-    mechanical: boolean;
-    ergonomic: boolean;
-    psychosocial: boolean;
-    biological: boolean;
-  };
-  workAccident: boolean;
-  occupationalDisease: boolean;
-}
+import { WorkHistory } from "@/app/redux/slices/patientSlice";
 
 interface Props {
   formData: { workHistory: WorkHistory };

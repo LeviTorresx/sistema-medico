@@ -1,11 +1,5 @@
 import { ClipboardCheck, FileText, ThumbsUp, Ban } from "lucide-react";
-
-interface Evaluation {
-  diagnoses: string[];
-  recommendations: string;
-  workAptitude: string;
-  restrictions: string;
-}
+import { Evaluation } from "@/app/redux/slices/patientSlice";
 
 interface EvaluationFormProps {
   formData: { evaluation: Evaluation };

@@ -9,17 +9,7 @@ import {
   Heart,
 } from "lucide-react";
 import { ChangeEvent } from "react";
-
-interface PersonalData {
-  name: string;
-  identification: string;
-  birthCity: string;
-  birthDate: string; // Debe ser string en formato YYYY-MM-DD
-  phone: string;
-  education: string;
-  address: string;
-  healthInsurance: string;
-}
+import { PersonalData } from "../../../redux/slices/patientSlice";
 
 interface Props {
   formData: { personalData: PersonalData };
@@ -27,8 +17,11 @@ interface Props {
   bgColor: string;
 }
 
-export default function PersonalDataForm({ formData, handleChange, bgColor}: Props) {
-
+export default function PersonalDataForm({
+  formData,
+  handleChange,
+  bgColor,
+}: Props) {
   return (
     <details className="border border-gray-300 shadow-md rounded-xl p-5 w-10/12 bg-white transition-all">
       <summary

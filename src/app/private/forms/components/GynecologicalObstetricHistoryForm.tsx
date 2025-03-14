@@ -6,19 +6,7 @@ import {
   ShieldCheck,
   PlusCircle,
 } from "lucide-react";
-
-interface GynecologicalObstetricHistory {
-  menarche: number;
-  cycles: string;
-  g: number;
-  p: number;
-  a: number;
-  v: number;
-  lastMenstrualPeriod: string;
-  usesContraception: boolean;
-  contraceptionMethod?: string;
-  papSmear: string;
-}
+import { GynecologicalObstetricHistory } from "@/app/redux/slices/patientSlice";
 
 interface Props {
   formData: { gynecologicalObstetricHistory: GynecologicalObstetricHistory };

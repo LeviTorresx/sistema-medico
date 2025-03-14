@@ -1,17 +1,6 @@
 import React, { FC } from "react";
 import { Cigarette, Wine, Dumbbell, Leaf } from "lucide-react"; // Iconos
-
-interface Habits {
-  smoking: boolean;
-  exSmoker: boolean;
-  cigarettesPerDay?: number;
-  yearsOfConsumption?: number;
-  alcohol: boolean;
-  alcoholFrequency?: string;
-  substances: boolean;
-  sports: boolean;
-  sportsFrequency?: string;
-}
+import { Habits } from "../../../redux/slices/patientSlice";
 
 interface Props {
   formData: { habits: Habits };

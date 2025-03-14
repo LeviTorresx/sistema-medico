@@ -12,7 +12,7 @@ export interface PatientState {
   evaluation: Evaluation;
 }
 
-interface PersonalData {
+export interface PersonalData {
   name: string;
   identification: string;
   birthCity: string;
@@ -26,7 +26,7 @@ interface PersonalData {
   occupationalRiskInsurance: string;
 }
 
-interface Habits {
+export interface Habits {
   smoking: boolean;
   exSmoker: boolean;
   cigarettesPerDay?: number; // Opcional si nunca ha fumado
@@ -38,7 +38,7 @@ interface Habits {
   sportsFrequency?: string; // Ejemplo: "3 veces por semana", opcional si no practica deportes
 }
 
-interface PersonalHistory {
+export interface PersonalHistory {
   pathological: string;
   hospitalizations: string;
   surgeries: string;
@@ -49,7 +49,7 @@ interface PersonalHistory {
   others: string;
 }
 
-interface FamilyHistory {
+export interface FamilyHistory {
   metabolic: boolean;
   heartDisease: boolean;
   fatherHypertension: boolean;
@@ -57,7 +57,7 @@ interface FamilyHistory {
   otherHistory: string;
 }
 
-interface GynecologicalObstetricHistory {
+export interface GynecologicalObstetricHistory {
   menarche: number; // Edad de la primera menstruación
   cycles: string; // Regularidad del ciclo
   g: number; // Gestaciones
@@ -70,7 +70,7 @@ interface GynecologicalObstetricHistory {
   papSmear: ""; // Fecha del último Papanicolaou
 }
 
-interface WorkHistory {
+ export interface WorkHistory {
   company: string;
   jobTitle: string;
   workDuration: string; // Ejemplo: "5 años", "2 meses"
@@ -79,7 +79,7 @@ interface WorkHistory {
   occupationalDisease: boolean;
 }
 
-interface WorkRisks {
+ export interface WorkRisks {
   physical: boolean;
   mechanical: boolean;
   ergonomic: boolean;
@@ -87,7 +87,7 @@ interface WorkRisks {
   biological: boolean;
 }
 
-interface Evaluation {
+export interface Evaluation {
   diagnoses: string[];
   recommendations: string;
   workAptitude: string;
