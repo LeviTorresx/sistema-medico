@@ -197,25 +197,25 @@ export default function RegistrationForms({
 
   // Manejo de envío de formulario
 
- // Función para actualizar datos del paciente
- const handleSubmit = async (e: FormEvent) => {
-  e.preventDefault();
-  try {
-    if (existingData) {
-      // Si ya existe, actualizar
-     // await dispatch(updatePatient(formData)).unwrap();
-      //alert("Paciente actualizado correctamente");
-    } else {
-      // Si es nuevo, agregar
-      await dispatch(addPatient(formData)).unwrap();
-      alert("Paciente agregado correctamente");
+  // Función para actualizar datos del paciente
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    try {
+      if (existingData) {
+        // Si ya existe, actualizar
+        // await dispatch(updatePatient(formData)).unwrap();
+        //alert("Paciente actualizado correctamente");
+      } else {
+        // Si es nuevo, agregar
+        await dispatch(addPatient(formData)).unwrap();
+        alert("Paciente agregado correctamente");
+      }
+      router.push("/private/dashboard");
+    } catch (error) {
+      console.error("Error al guardar paciente:", error);
+      alert("Hubo un error al guardar los datos");
     }
-    router.push("/private/dashboard");
-  } catch (error) {
-    console.error("Error al guardar paciente:", error);
-    alert("Hubo un error al guardar los datos");
-  }
-};
+  };
 
   return (
     <div className="w-full max-w-7xl mx-auto p-4 border rounded-lg shadow-lg bg-slate-300 text-slate-900">

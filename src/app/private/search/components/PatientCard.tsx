@@ -1,12 +1,11 @@
 import React, { FC } from "react";
-import { format } from "date-fns";
 
 interface PatientCardProps {
   personalData: {
     name: string;
     identification: string;
     birthCity: string;
-    birthDate: Date;
+    birthDate: string;
     age: number;
     education: string;
     maritalStatus: string;
@@ -30,10 +29,7 @@ const PatientCard: FC<PatientCardProps> = ({ personalData }) => {
           { label: "Ciudad Nacimiento", value: personalData.birthCity },
           {
             label: "Fecha Nacimiento",
-            value:
-              personalData.birthDate instanceof Date
-                ? format(personalData.birthDate, "dd/MM/yyyy")
-                : "N/A",
+            value: personalData.birthDate,
           },
           { label: "Edad", value: personalData.age },
           { label: "Escolaridad", value: personalData.education },
