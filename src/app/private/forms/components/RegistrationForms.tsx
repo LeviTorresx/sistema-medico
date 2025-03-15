@@ -1,16 +1,21 @@
 "use client";
 import { useState, ChangeEvent, FormEvent } from "react";
-import { PatientState, addPatient } from "@/app/redux/slices/patientSlice";
+import {
+  MedicalExam,
+  PatientState,
+  addPatient,
+} from "@/app/redux/slices/patientSlice";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/app/redux/store";
 import { useRouter } from "next/navigation"; // Reemplazo de window.location
-import PersonalDataForm from "./PersonalDataForm";
-import HabitsForm from "./HabitsForms";
-import PersonalHistoryForm from "./PersonalHistoryForm";
-import FamilyHistoryForm from "./FamilyHistoryForm";
-import GynecologicalObstetricHistoryForm from "./GynecologicalObstetricHistoryForm";
-import WorkHistoryForm from "./WorkHistoryForm";
-import EvaluationForm from "./EvaluationForm";
+import PersonalDataForm from "./registrationComponents/PersonalDataForm";
+import PersonalHistoryForm from "./registrationComponents/PersonalHistoryForm";
+import FamilyHistoryForm from "./registrationComponents/FamilyHistoryForm";
+import GynecologicalObstetricHistoryForm from "./registrationComponents/GynecologicalObstetricHistoryForm";
+import WorkHistoryForm from "./registrationComponents/WorkHistoryForm";
+import EvaluationForm from "./registrationComponents/EvaluationForm";
+import HabitsForm from "./registrationComponents/HabitsForms";
+import ExamForms from "./ExamsForm";
 
 interface RegistrationFormsProps {
   existingData?: PatientState;
@@ -98,8 +103,21 @@ export default function RegistrationForms({
         workAptitude: "",
         restrictions: "",
       },
+      medicalExams: [],
     }
   );
+
+  // Estado para controlar el modal de exámenes
+  const [showExamModal, setShowExamModal] = useState(false);
+
+  // Función para agregar un nuevo examen al estado
+  const handleAddExam = (examData: MedicalExam) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      medicalExams: [...prevData.medicalExams, examData],
+    }));
+    setShowExamModal(false); // Cerrar el modal después de agregar el examen
+  };
 
   // Manejo de cambios en los inputs
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -218,12 +236,12 @@ export default function RegistrationForms({
   };
 
   return (
-    <div className="w-full max-w-7xl mx-auto p-4 border rounded-lg shadow-lg bg-slate-300 text-slate-900">
+    <div className="w-full max-w-7xl mx-auto p-4 border rounded-lg shadow-lg bg-slate-100 text-slate-900">
       <h2 className="text-2xl font-bold text-center mb-2">
         Consulta de usuario
       </h2>
 
-      <form onSubmit={handleSubmit} className="h-[70vh] overflow-y-auto">
+      <form onSubmit={handleSubmit} className="h-[80vh] overflow-y-auto">
         <div className="flex flex-col gap-2 items-center overflow-y-auto p-2 ">
           <PersonalDataForm
             formData={formData}
@@ -263,6 +281,15 @@ export default function RegistrationForms({
             removeDiagnosis={removeDiagnosis}
             bgColor={getBackgroundColor(formData.evaluation)}
           />
+
+          {/* Botón para abrir el modal de exámenes */}
+          <button
+            type="button"
+            onClick={() => setShowExamModal(true)}
+            className="mt-4 py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
+          >
+            Ver exámenes
+          </button>
         </div>
         <div className="p-4 bg-white border-t shadow-lg sticky bottom-0 rounded-lg">
           <button
@@ -273,6 +300,21 @@ export default function RegistrationForms({
           </button>
         </div>
       </form>
+      {/* Modal para agregar exámenes */}
+      {showExamModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-8/12">
+            <h3 className="text-xl font-semibold mb-4">Agregar Examen</h3>
+            <ExamForms onSave={handleAddExam} />
+            <button
+              onClick={() => setShowExamModal(false)}
+              className="mt-4 w-full py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
+            >
+              Cancelar
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

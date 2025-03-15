@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import { Cigarette, Wine, Dumbbell, Leaf } from "lucide-react"; // Iconos
-import { Habits } from "../../../redux/slices/patientSlice";
+import { Habits } from "@/app/redux/slices/patientSlice";
 
 interface Props {
   formData: { habits: Habits };

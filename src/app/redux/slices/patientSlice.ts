@@ -10,6 +10,7 @@ export interface PatientState {
   gynecologicalObstetricHistory: GynecologicalObstetricHistory;
   workHistory: WorkHistory;
   evaluation: Evaluation;
+  medicalExams: MedicalExam[];
 }
 
 export interface PersonalData {
@@ -66,20 +67,20 @@ export interface GynecologicalObstetricHistory {
   v: number; // Vivos
   lastMenstrualPeriod: "";
   usesContraception: boolean;
-  contraceptionMethod?: string; // Opcional si no usa anticonceptivos
-  papSmear: ""; // Fecha del último Papanicolaou
+  contraceptionMethod?: string;
+  papSmear: "";
 }
 
- export interface WorkHistory {
+export interface WorkHistory {
   company: string;
   jobTitle: string;
-  workDuration: string; // Ejemplo: "5 años", "2 meses"
+  workDuration: string;
   risks: WorkRisks;
   workAccident: boolean;
   occupationalDisease: boolean;
 }
 
- export interface WorkRisks {
+export interface WorkRisks {
   physical: boolean;
   mechanical: boolean;
   ergonomic: boolean;
@@ -92,6 +93,58 @@ export interface Evaluation {
   recommendations: string;
   workAptitude: string;
   restrictions: string;
+}
+
+// Interfaz para los exámenes médicos
+
+export interface MedicalExam {
+  type: "INGRESO" | "RETIRO" | "PERIÓDICO" | "ESPECIAL"; // Tipo de examen médico
+  date: string; // Fecha del examen
+  city: string; // Ciudad donde se realiza
+  occupationalData: OccupationalData;
+  examsPerformed: ExamsPerformed;
+  workAptitude: WorkAptitude;
+  generalRecommendations: string;
+  restrictions: string;
+}
+
+export interface OccupationalData {
+  employer: string;
+  entry: boolean;
+  exit: boolean;
+  periodic: boolean;
+  name: string;
+  identification: string;
+  eps: string;
+  arl: string;
+  pensionFund: string;
+  jobTitle: string;
+}
+
+interface ExamsPerformed {
+  osteomuscular: boolean;
+  spirometry: boolean;
+  laboratories: boolean;
+  audiometry: boolean;
+  psychotechnics: boolean;
+  visiometry: boolean;
+  optometry: boolean;
+  others: string;
+}
+
+interface WorkAptitude {
+  entry: {
+    withoutRestriction: boolean;
+    withRestriction: string;
+  };
+  periodic: {
+    canContinueWorking: boolean;
+    jobRelocation: string;
+  };
+  exit: {
+    satisfactory: boolean;
+    notSatisfactory: boolean;
+  };
 }
 
 interface PatientsState {

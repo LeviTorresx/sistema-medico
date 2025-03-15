@@ -9,7 +9,7 @@ import {
   Heart,
 } from "lucide-react";
 import { ChangeEvent } from "react";
-import { PersonalData } from "../../../redux/slices/patientSlice";
+import { PersonalData } from "@/app/redux/slices/patientSlice";
 
 interface Props {
   formData: { personalData: PersonalData };
