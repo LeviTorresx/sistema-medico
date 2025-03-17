@@ -110,7 +110,7 @@ export default function RegistrationForms({
           occupationalData: {
             employer: "",
             entry: false,
-            exit: false,
+            exitStatus: false,
             periodic: false,
             name: "",
             identification: "",
@@ -130,18 +130,9 @@ export default function RegistrationForms({
             others: "",
           },
           workAptitude: {
-            entry: {
-              withoutRestriction: false,
-              withRestriction: "",
-            },
-            periodic: {
-              canContinueWorking: false,
-              jobRelocation: "",
-            },
-            exit: {
-              satisfactory: false,
-              notSatisfactory: false,
-            },
+            entry: false,
+            periodic: false,
+            exitStatus: false,
           },
           generalRecommendation: {
             generalRecommendations: "",
@@ -171,7 +162,7 @@ export default function RegistrationForms({
           occupationalData: {
             employer: "",
             entry: false,
-            exit: false,
+            exitStatus: false,
             periodic: false,
             name: "",
             identification: "",
@@ -191,18 +182,9 @@ export default function RegistrationForms({
             others: "",
           },
           workAptitude: {
-            entry: {
-              withoutRestriction: false,
-              withRestriction: "",
-            },
-            periodic: {
-              canContinueWorking: false,
-              jobRelocation: "",
-            },
-            exit: {
-              satisfactory: false,
-              notSatisfactory: false,
-            },
+            entry: false,
+            periodic: false,
+            exitStatus: false,
           },
           generalRecommendation: {
             generalRecommendations: "",
@@ -282,7 +264,7 @@ export default function RegistrationForms({
               },
               examsPerformed: {
                 ...exam.examsPerformed,
-                [name]: type === "select" ? e.target.select : value,
+                [name]: type === "checkbox" ? e.target.checked : value,
               },
               generalRecommendation: {
                 ...exam.generalRecommendation,
@@ -362,9 +344,10 @@ export default function RegistrationForms({
         // await dispatch(updatePatient(formData)).unwrap();
         //alert("Paciente actualizado correctamente");
       } else {
-        // Si es nuevo, agregar
+        // Si es nuevo, agregar  
         await dispatch(addPatient(formData)).unwrap();
         alert("Paciente agregado correctamente");
+      
       }
       router.push("/private/dashboard");
     } catch (error) {
@@ -465,24 +448,31 @@ export default function RegistrationForms({
 
             {/* Lista de exámenes agregados */}
             {formData.medicalExams.map((exam, index) => (
-              <div key={index} className="border p-4 mb-2 rounded-lg shadow-sm">
+              <div
+                key={index}
+                className="border p-6 mb-4 rounded-2xl shadow-md bg-white"
+              >
                 <div className="flex justify-between items-center">
-                  <details>
-                    <summary>
-                      <span>exam {index + 1}</span>
+                  <details className="w-full">
+                    <summary className="cursor-pointer flex justify-between items-center p-3 bg-gray-100 rounded-lg hover:bg-gray-200 transition">
+                      <span className="text-lg font-semibold text-gray-700">
+                        Examen {index + 1}
+                      </span>
                       <button
                         onClick={() => removeMedicalExam(index)}
-                        className="text-red-500 hover:text-red-700"
+                        className="text-red-500 hover:text-red-700 transition"
                       >
-                        <Trash />
+                        <Trash className="w-5 h-5" />
                       </button>
                     </summary>
-                    {/*formulario para examenes*/}
-                    <ExamsForms
-                      examData={exam}
-                      index={index}
-                      handleChange={(e) => handleExamChange(e, index)}
-                    />
+                    <div className="mt-4">
+                      {/* Formulario de exámenes */}
+                      <ExamsForms
+                        examData={exam}
+                        index={index}
+                        handleChange={(e) => handleExamChange(e, index)}
+                      />
+                    </div>
                   </details>
                 </div>
               </div>
@@ -492,15 +482,15 @@ export default function RegistrationForms({
             <button
               type="button"
               onClick={addMedicalExam}
-              className="mt-4 py-2 px-4 bg-green-500 text-white rounded-lg hover:bg-green-600 transition"
+              className="mt-6 py-3 px-6 bg-green-500 text-white font-semibold rounded-xl shadow-md hover:bg-green-600 transition"
             >
-              Agregar Examen
+              + Agregar Examen
             </button>
 
             {/* Botón para cerrar el modal */}
             <button
               onClick={() => setShowExamModal(false)}
-              className="mt-4 w-full py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
+              className="mt-4 w-full py-3 bg-red-500 text-white font-semibold rounded-xl shadow-md hover:bg-red-600 transition"
             >
               Cancelar
             </button>

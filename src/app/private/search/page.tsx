@@ -7,6 +7,8 @@ import PrivateLayout from "../PrivateLayout";
 import SearchBar from "./components/SearchBar";
 import { fetchPatients, PatientState } from "@/app/redux/slices/patientSlice";
 import PatientCard from "./components/PatientCard";
+import { Pencil } from "lucide-react";
+import Link from "next/link";
 
 export default function Search() {
   const dispatch = useDispatch<AppDispatch>();
@@ -80,7 +82,16 @@ export default function Search() {
         {fetchError && <p className="text-red-500 text-lg">{fetchError}</p>}
 
         {patient ? (
-          <PatientCard personalData={patient.personalData} />
+          <div className="flex flex-col">
+            <PatientCard personalData={patient.personalData} />
+            <Link
+              href={`/forms/${patient.personalData.identification}`}
+              className="mt-2 px-4 py-2 bg-orange-400 text-white text-xl rounded flex justify-center items-center gap-2"
+            >
+              <Pencil size={20} />
+              Editar
+            </Link>
+          </div>
         ) : (
           showAddButton && (
             <div className="flex flex-col items-center justify-center bg-red-50 border border-red-400 shadow-lg rounded-xl p-6 w-full max-w-sm">

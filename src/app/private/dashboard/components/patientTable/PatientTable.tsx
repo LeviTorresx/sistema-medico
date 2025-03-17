@@ -30,6 +30,10 @@ export default function PatientTable() {
       </p>
     );
 
+  const handleId = (patient: string) => {
+    console.log(`Ver más sobre ${patient}`);
+  };
+
   return (
     <div className="p-6">
       <h2 className="text-2xl font-bold text-gray-800 mb-4 text-center">
@@ -72,9 +76,7 @@ export default function PatientTable() {
                 <td className="p-3">
                   <button
                     className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700 transition"
-                    onClick={() =>
-                      alert(`Ver más sobre ${patient.personalData.name}`)
-                    }
+                    onClick={()=>handleId(patient.personalData.name)}
                   >
                     <Eye className="w-5 h-5" /> <span>Ver más</span>
                   </button>

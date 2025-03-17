@@ -17,7 +17,7 @@ export interface PersonalData {
   name: string;
   identification: string;
   birthCity: string;
-  birthDate: "";
+  birthDate: string;
   age: number;
   education: string;
   maritalStatus: string;
@@ -68,19 +68,19 @@ export interface GynecologicalObstetricHistory {
   lastMenstrualPeriod: "";
   usesContraception: boolean;
   contraceptionMethod?: string;
-  papSmear: "";
+  papSmear: string;
 }
 
 export interface WorkHistory {
   company: string;
   jobTitle: string;
   workDuration: string;
-  risks: WorkRisks;
+  risks: Risks;
   workAccident: boolean;
   occupationalDisease: boolean;
 }
 
-export interface WorkRisks {
+export interface Risks {
   physical: boolean;
   mechanical: boolean;
   ergonomic: boolean;
@@ -114,7 +114,7 @@ export interface DataExam {
 export interface OccupationalData {
   employer: string;
   entry: boolean;
-  exit: boolean;
+  exitStatus: boolean;
   periodic: boolean;
   name: string;
   identification: string;
@@ -136,18 +136,9 @@ export interface ExamsPerformed {
 }
 
 export interface WorkAptitude {
-  entry: {
-    withoutRestriction: boolean;
-    withRestriction: string;
-  };
-  periodic: {
-    canContinueWorking: boolean;
-    jobRelocation: string;
-  };
-  exit: {
-    satisfactory: boolean;
-    notSatisfactory: boolean;
-  };
+  entry: boolean;
+  periodic: boolean;
+  exitStatus: boolean;
 }
 
 export interface GeneralRecommendation{
@@ -278,7 +269,7 @@ const patientSlice = createSlice({
       })
       .addCase(editPatient.fulfilled, (state, action) => {
         state.loading = false;
-        const index = state.data.findIndex((p) => p.id === action.payload.id);
+        const index = state.data.findIndex((p) => p.id=== action.payload.id);
         if (index !== -1) {
           state.data[index] = action.payload; // Actualizar paciente en el estado
         }
