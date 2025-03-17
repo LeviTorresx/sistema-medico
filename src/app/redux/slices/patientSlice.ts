@@ -3,11 +3,12 @@ import axios from "axios";
 
 export interface PatientState {
   id: number;
+  idPatient: string;
   personalData: PersonalData;
   habits: Habits;
   personalHistory: PersonalHistory;
   familyHistory: FamilyHistory;
-  gynecologicalObstetricHistory: GynecologicalObstetricHistory;
+  gynecoObstetricHistory: GynecoObstetricHistory;
   workHistory: WorkHistory;
   evaluation: Evaluation;
   medicalExams: MedicalExam[];
@@ -58,7 +59,7 @@ export interface FamilyHistory {
   otherHistory: string;
 }
 
-export interface GynecologicalObstetricHistory {
+export interface GynecoObstetricHistory {
   menarche: number; // Edad de la primera menstruación
   cycles: string; // Regularidad del ciclo
   g: number; // Gestaciones
@@ -141,19 +142,21 @@ export interface WorkAptitude {
   exitStatus: boolean;
 }
 
-export interface GeneralRecommendation{
-  generalRecommendations: string,
-  restrictions: string,
+export interface GeneralRecommendation {
+  generalRecommendations: string;
+  restrictions: string;
 }
 
 interface PatientsState {
   data: PatientState[];
+  selectedPatient: PatientState | null; // Agregar esta propiedad para evitar el error
   loading: boolean;
   error: string | null;
 }
 
 const initialState: PatientsState = {
   data: [],
+  selectedPatient: null, // Agregar esta propiedad para evitar el error
   loading: false,
   error: null,
 };
@@ -166,6 +169,23 @@ export const fetchPatients = createAsyncThunk(
         "http://localhost:8080/api/patients/getAll"
       );
       return response.data;
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        return rejectWithValue(error.response?.data || error.message);
+      }
+      return rejectWithValue("An unknown error occurred");
+    }
+  }
+);
+
+export const fetchPatientById = createAsyncThunk(
+  "patients/fetchPatientById",
+  async (idPatient: string, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8080/api/patients/${idPatient}`
+      );
+      return response.data; // Devuelve el paciente obtenido
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
         return rejectWithValue(error.response?.data || error.message);
@@ -201,12 +221,15 @@ export const addPatient = createAsyncThunk(
 export const editPatient = createAsyncThunk(
   "patients/editPatient",
   async (
-    { id, patientData }: { id: number; patientData: Omit<PatientState, "id"> },
+    {
+      idPatient,
+      patientData,
+    }: { idPatient: string; patientData: Omit<PatientState, "id"> },
     { rejectWithValue }
   ) => {
     try {
       const response = await axios.put(
-        `http://localhost:8080/api/patients/${id}`,
+        `http://localhost:8080/api/patients/${idPatient}`,
         patientData,
         {
           headers: {
@@ -246,6 +269,24 @@ const patientSlice = createSlice({
             ? action.payload
             : "Error fetching patients";
       })
+
+      //Fetch patientsByIdPatient
+      .addCase(fetchPatientById.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchPatientById.fulfilled, (state, action) => {
+        state.loading = false;
+        state.selectedPatient = action.payload; // Guardar el paciente obtenido
+      })
+      .addCase(fetchPatientById.rejected, (state, action) => {
+        state.loading = false;
+        state.error =
+          typeof action.payload === "string"
+            ? action.payload
+            : "Error fetching patient";
+      })
+
       // Agregar casos para el thunk addPatient
       .addCase(addPatient.pending, (state) => {
         state.loading = true;
@@ -269,7 +310,7 @@ const patientSlice = createSlice({
       })
       .addCase(editPatient.fulfilled, (state, action) => {
         state.loading = false;
-        const index = state.data.findIndex((p) => p.id=== action.payload.id);
+        const index = state.data.findIndex((p) => p.id === action.payload.id);
         if (index !== -1) {
           state.data[index] = action.payload; // Actualizar paciente en el estado
         }

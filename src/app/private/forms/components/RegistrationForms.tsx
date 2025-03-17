@@ -1,7 +1,11 @@
 "use client";
 import { useState, ChangeEvent, FormEvent } from "react";
 import { Trash } from "lucide-react";
-import { PatientState, addPatient } from "@/app/redux/slices/patientSlice";
+import {
+  PatientState,
+  addPatient,
+  editPatient,
+} from "@/app/redux/slices/patientSlice";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/app/redux/store";
 import { useRouter } from "next/navigation"; // Reemplazo de window.location
@@ -15,7 +19,7 @@ import HabitsForm from "./registrationComponents/HabitsForms";
 import ExamsForms from "./ExamsForms";
 
 interface RegistrationFormsProps {
-  existingData?: PatientState;
+  existingData: PatientState;
 }
 
 export default function RegistrationForms({
@@ -27,6 +31,7 @@ export default function RegistrationForms({
   const [formData, setFormData] = useState<PatientState>(
     existingData || {
       id: 0,
+      idPatient: "",
       personalData: {
         name: "",
         identification: "",
@@ -68,7 +73,7 @@ export default function RegistrationForms({
         cancer: false,
         otherHistory: "",
       },
-      gynecologicalObstetricHistory: {
+      gynecoObstetricHistory: {
         menarche: 0,
         cycles: "",
         g: 0,
@@ -226,8 +231,8 @@ export default function RegistrationForms({
         ...prevData.familyHistory,
         [name]: type === "checkbox" ? e.target.checked : value,
       },
-      gynecologicalObstetricHistory: {
-        ...prevData.gynecologicalObstetricHistory,
+      gynecoObstetricHistory: {
+        ...prevData.gynecoObstetricHistory,
         [name]: type === "checkbox" ? e.target.checked : value,
       },
       workHistory: {
@@ -281,7 +286,9 @@ export default function RegistrationForms({
   };
 
   // Función para determinar el color de fondo según los datos de un formulario
-  const getBackgroundColor = (formSection: object) => {
+  const getBackgroundColor = (formSection: object | undefined | null) => {
+    if (!formSection || typeof formSection !== "object") return "bg-gray-100"; // Retorna gris si no es un objeto válido
+
     const values = Object.values(formSection);
 
     const allFieldsEmpty = values.every(
@@ -341,13 +348,17 @@ export default function RegistrationForms({
     try {
       if (existingData) {
         // Si ya existe, actualizar
-        // await dispatch(updatePatient(formData)).unwrap();
-        //alert("Paciente actualizado correctamente");
+        await dispatch(
+          editPatient({
+            idPatient: existingData.idPatient, // Asegúrate de que existingData tiene un ID válido
+            patientData: formData, // Los datos actualizados del paciente
+          })
+        ).unwrap();
+        alert("Paciente actualizado correctamente");
       } else {
-        // Si es nuevo, agregar  
+        // Si es nuevo, agregar
         await dispatch(addPatient(formData)).unwrap();
         alert("Paciente agregado correctamente");
-      
       }
       router.push("/private/dashboard");
     } catch (error) {
@@ -410,7 +421,7 @@ export default function RegistrationForms({
           <GynecologicalObstetricHistoryForm
             formData={formData}
             handleChange={handleChange}
-            bgColor={getBackgroundColor(formData.gynecologicalObstetricHistory)}
+            bgColor={getBackgroundColor(formData.gynecoObstetricHistory)}
           />
           <WorkHistoryForm
             formData={formData}

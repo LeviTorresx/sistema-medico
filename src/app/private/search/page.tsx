@@ -85,7 +85,7 @@ export default function Search() {
           <div className="flex flex-col">
             <PatientCard personalData={patient.personalData} />
             <Link
-              href={`/forms/${patient.personalData.identification}`}
+              href={`/private/formsEdits/${patient.idPatient}`}
               className="mt-2 px-4 py-2 bg-orange-400 text-white text-xl rounded flex justify-center items-center gap-2"
             >
               <Pencil size={20} />

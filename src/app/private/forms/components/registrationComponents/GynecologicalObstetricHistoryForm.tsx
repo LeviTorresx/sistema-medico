@@ -6,10 +6,10 @@ import {
   ShieldCheck,
   PlusCircle,
 } from "lucide-react";
-import { GynecologicalObstetricHistory } from "@/app/redux/slices/patientSlice";
+import { GynecoObstetricHistory } from "@/app/redux/slices/patientSlice";
 
 interface Props {
-  formData: { gynecologicalObstetricHistory: GynecologicalObstetricHistory };
+  formData: { gynecoObstetricHistory: GynecoObstetricHistory };
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   bgColor: string;
 }
@@ -38,7 +38,7 @@ export default function GynecologicalObstetricHistoryForm({
             type="number"
             name="menarche"
             placeholder="Edad de menarquia"
-            value={formData.gynecologicalObstetricHistory.menarche}
+            value={formData.gynecoObstetricHistory.menarche}
             onChange={handleChange}
             className="w-full p-3 border-none focus:outline-none bg-white"
           />
@@ -52,7 +52,7 @@ export default function GynecologicalObstetricHistoryForm({
             type="text"
             name="cycles"
             placeholder="Descripción de ciclos"
-            value={formData.gynecologicalObstetricHistory.cycles}
+            value={formData.gynecoObstetricHistory.cycles}
             onChange={handleChange}
             className="w-full p-3 border-none focus:outline-none bg-white"
           />
@@ -68,7 +68,7 @@ export default function GynecologicalObstetricHistoryForm({
               type="number"
               name="g"
               placeholder="G"
-              value={formData.gynecologicalObstetricHistory.g ?? ""}
+              value={formData.gynecoObstetricHistory.g ?? ""}
               onChange={handleChange}
               className="w-full p-3 border-none focus:outline-none bg-white"
             />
@@ -83,7 +83,7 @@ export default function GynecologicalObstetricHistoryForm({
               type="number"
               name="p"
               placeholder="P"
-              value={formData.gynecologicalObstetricHistory.p ?? ""}
+              value={formData.gynecoObstetricHistory.p ?? ""}
               onChange={handleChange}
               className="w-full p-3 border-none focus:outline-none bg-white"
             />
@@ -97,7 +97,7 @@ export default function GynecologicalObstetricHistoryForm({
               type="number"
               name="a"
               placeholder="A"
-              value={formData.gynecologicalObstetricHistory.a ?? ""}
+              value={formData.gynecoObstetricHistory.a ?? ""}
               onChange={handleChange}
               className="w-full p-3 border-none focus:outline-none bg-white"
             />
@@ -112,7 +112,7 @@ export default function GynecologicalObstetricHistoryForm({
               type="number"
               name="v"
               placeholder="V"
-              value={formData.gynecologicalObstetricHistory.v ?? ""}
+              value={formData.gynecoObstetricHistory.v ?? ""}
               onChange={handleChange}
               className="w-full p-3 border-none focus:outline-none bg-white"
             />
@@ -126,7 +126,7 @@ export default function GynecologicalObstetricHistoryForm({
           <input
             type="date"
             name="lastMenstrualPeriod"
-            value={formData.gynecologicalObstetricHistory.lastMenstrualPeriod}
+            value={formData.gynecoObstetricHistory.lastMenstrualPeriod}
             onChange={handleChange}
             className="w-full p-3 border-none focus:outline-none bg-white"
           />
@@ -139,7 +139,7 @@ export default function GynecologicalObstetricHistoryForm({
             <input
               type="checkbox"
               name="usesContraception"
-              checked={formData.gynecologicalObstetricHistory.usesContraception}
+              checked={formData.gynecoObstetricHistory.usesContraception}
               onChange={handleChange}
               className="accent-blue-500"
             />
@@ -155,7 +155,7 @@ export default function GynecologicalObstetricHistoryForm({
             type="text"
             name="contraceptionMethod"
             placeholder="Método anticonceptivo"
-            value={formData.gynecologicalObstetricHistory.contraceptionMethod}
+            value={formData.gynecoObstetricHistory.contraceptionMethod}
             onChange={handleChange}
             className="w-full p-3 border-none focus:outline-none bg-white"
           />
@@ -169,7 +169,7 @@ export default function GynecologicalObstetricHistoryForm({
             type="text"
             name="papSmear"
             placeholder="Última citología"
-            value={formData.gynecologicalObstetricHistory.papSmear}
+            value={formData.gynecoObstetricHistory.papSmear}
             onChange={handleChange}
             className="w-full p-3 border-none focus:outline-none bg-white"
           />
