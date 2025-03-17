@@ -98,14 +98,17 @@ export interface Evaluation {
 // Interfaz para los exámenes médicos
 
 export interface MedicalExam {
-  type: "INGRESO" | "RETIRO" | "PERIÓDICO" | "ESPECIAL"; // Tipo de examen médico
-  date: string; // Fecha del examen
-  city: string; // Ciudad donde se realiza
+  dataExam: DataExam;
   occupationalData: OccupationalData;
   examsPerformed: ExamsPerformed;
   workAptitude: WorkAptitude;
-  generalRecommendations: string;
-  restrictions: string;
+  generalRecommendation: GeneralRecommendation;
+}
+
+export interface DataExam {
+  type: "INGRESO" | "RETIRO" | "PERIÓDICO" | "ESPECIAL"; // Tipo de examen médico
+  date: string; // Fecha del examen
+  city: string; // Ciudad donde se realiza
 }
 
 export interface OccupationalData {
@@ -121,7 +124,7 @@ export interface OccupationalData {
   jobTitle: string;
 }
 
-interface ExamsPerformed {
+export interface ExamsPerformed {
   osteomuscular: boolean;
   spirometry: boolean;
   laboratories: boolean;
@@ -132,7 +135,7 @@ interface ExamsPerformed {
   others: string;
 }
 
-interface WorkAptitude {
+export interface WorkAptitude {
   entry: {
     withoutRestriction: boolean;
     withRestriction: string;
@@ -145,6 +148,11 @@ interface WorkAptitude {
     satisfactory: boolean;
     notSatisfactory: boolean;
   };
+}
+
+export interface GeneralRecommendation{
+  generalRecommendations: string,
+  restrictions: string,
 }
 
 interface PatientsState {
