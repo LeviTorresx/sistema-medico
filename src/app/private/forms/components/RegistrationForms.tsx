@@ -19,7 +19,7 @@ import HabitsForm from "./registrationComponents/HabitsForms";
 import ExamsForms from "./ExamsForms";
 
 interface RegistrationFormsProps {
-  existingData: PatientState;
+  existingData?: PatientState;
 }
 
 export default function RegistrationForms({

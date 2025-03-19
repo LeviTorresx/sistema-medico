@@ -4,7 +4,6 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../../redux/store";
 import { fetchPatients } from "../../../../redux/slices/patientSlice";
-import { Eye } from "lucide-react";
 
 export default function PatientTable() {
   const dispatch = useDispatch<AppDispatch>();
@@ -30,10 +29,6 @@ export default function PatientTable() {
       </p>
     );
 
-  const handleId = (patient: string) => {
-    console.log(`Ver más sobre ${patient}`);
-  };
-
   return (
     <div className="p-6">
       <h2 className="text-2xl font-bold text-gray-800 mb-4 text-center">
@@ -54,7 +49,6 @@ export default function PatientTable() {
               <th className="p-3 text-left">Teléfono</th>
               <th className="p-3 text-left">EPS</th>
               <th className="p-3 text-left">ARL</th>
-              <th className="p-3 text-left">Acciones</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-300">
@@ -72,14 +66,6 @@ export default function PatientTable() {
                 <td className="p-3">{patient.personalData.healthInsurance}</td>
                 <td className="p-3">
                   {patient.personalData.occupationalRiskInsurance}
-                </td>
-                <td className="p-3">
-                  <button
-                    className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700 transition"
-                    onClick={()=>handleId(patient.personalData.name)}
-                  >
-                    <Eye className="w-5 h-5" /> <span>Ver más</span>
-                  </button>
                 </td>
               </tr>
             ))}

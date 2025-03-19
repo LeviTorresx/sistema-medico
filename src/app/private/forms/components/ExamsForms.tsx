@@ -145,7 +145,7 @@ export default function ExamsForms({
           <input
             type="checkbox"
             name="exit"
-            checked={examData.occupationalData.exit}
+            checked={examData.occupationalData.exitStatus}
             onChange={handleChange}
             className="w-5 h-5"
           />
@@ -267,7 +267,7 @@ export default function ExamsForms({
           <span>Periódico</span>
         </label>
         <label className="flex items-center space-x-2">
-          <input type="checkbox" name="exit" checked={examData.workAptitude.exit} onChange={handleChange} className="w-5 h-5" />
+          <input type="checkbox" name="exit" checked={examData.workAptitude.exitStatus} onChange={handleChange} className="w-5 h-5" />
           <span>Retiro</span>
         </label>
       </div>

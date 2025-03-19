@@ -13,7 +13,11 @@ interface Props {
   bgColor: string;
 }
 
-export default function WorkHistoryForm({ formData, handleChange, bgColor }: Props) {
+export default function WorkHistoryForm({
+  formData,
+  handleChange,
+  bgColor,
+}: Props) {
   return (
     <details className="border border-gray-300 shadow-md rounded-xl p-5 w-10/12 bg-white transition-all">
       <summary
@@ -78,7 +82,7 @@ export default function WorkHistoryForm({ formData, handleChange, bgColor }: Pro
               <label key={key} className="flex items-center gap-2">
                 <input
                   type="checkbox"
-                  name={`risks.${key}`}
+                  name={`risks.${value}`}
                   checked={value}
                   onChange={handleChange}
                   className="w-4 h-4"

@@ -29,11 +29,6 @@ export default function PrivateLayout({
                 Dashboard
               </Link>
             </li>
-            <li>
-              <Link href="/private/profile" className="hover:text-gray-300 transition">
-                Perfil
-              </Link>
-            </li>
           </ul>
 
           {/* Usuario + Logout */}
