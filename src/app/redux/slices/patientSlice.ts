@@ -229,7 +229,7 @@ export const editPatient = createAsyncThunk(
   ) => {
     try {
       const response = await axios.put(
-        `http://localhost:8080/api/patients/${idPatient}`,
+        `http://localhost:8080/api/patients/edits/${idPatient}`,
         patientData,
         {
           headers: {

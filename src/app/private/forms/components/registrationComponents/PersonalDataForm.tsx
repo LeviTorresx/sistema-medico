@@ -126,6 +126,21 @@ export default function PersonalDataForm({
           />
         </div>
 
+        {/* Estado civil*/}
+        <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden focus-within:ring-2 focus-within:ring-blue-500 transition-all">
+          <School className="p-3 bg-gray-100 text-gray-500" />
+          <label className="text-gray-500">Estado civil</label>
+          <input
+            type="text"
+            name="maritalStatus"
+            placeholder="Estado civil"
+            value={formData.personalData.maritalStatus}
+            onChange={handleChange}
+            required
+            className="w-full p-3 border-none focus:outline-none bg-white"
+          />
+        </div>
+
         {/* Dirección */}
         <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden focus-within:ring-2 focus-within:ring-blue-500 transition-all">
           <Home className="p-3 bg-gray-100 text-gray-500" />
@@ -150,6 +165,20 @@ export default function PersonalDataForm({
             name="healthInsurance"
             placeholder="EPS o Seguro de Salud"
             value={formData.personalData.healthInsurance}
+            onChange={handleChange}
+            required
+            className="w-full p-3 border-none focus:outline-none bg-white"
+          />
+        </div>
+
+        <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden focus-within:ring-2 focus-within:ring-blue-500 transition-all">
+          <Heart className="p-3 bg-gray-100 text-gray-500" />
+          <label className="text-gray-500">ARL</label>
+          <input
+            type="text"
+            name="occupationalRiskInsurance"
+            placeholder="ARL"
+            value={formData.personalData.occupationalRiskInsurance}
             onChange={handleChange}
             required
             className="w-full p-3 border-none focus:outline-none bg-white"

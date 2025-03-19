@@ -209,41 +209,57 @@ export default function RegistrationForms({
     });
   };
 
-  // Manejo de cambios en los inputs
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value, type } = e.target;
 
-    setFormData((prevData) => ({
-      ...prevData,
-      personalData: {
-        ...prevData.personalData,
-        [name]: value,
-      },
-      habits: {
-        ...prevData.habits,
-        [name]: type === "checkbox" ? e.target.checked : value,
-      },
-      personalHistory: {
-        ...prevData.personalHistory,
-        [name]: value,
-      },
-      familyHistory: {
-        ...prevData.familyHistory,
-        [name]: type === "checkbox" ? e.target.checked : value,
-      },
-      gynecoObstetricHistory: {
-        ...prevData.gynecoObstetricHistory,
-        [name]: type === "checkbox" ? e.target.checked : value,
-      },
-      workHistory: {
-        ...prevData.workHistory,
-        [name]: type === "checkbox" ? e.target.checked : value,
-      },
-      evaluation: {
-        ...prevData.evaluation,
-        [name]: value,
-      },
-    }));
+    setFormData((prevData) => {
+      let updatedPersonalData = { ...prevData.personalData, [name]: value };
+
+      // Calcular la edad si se modifica la fecha de nacimiento
+      if (name === "birthDate") {
+        const birthDate = new Date(value);
+        const today = new Date();
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const monthDiff = today.getMonth() - birthDate.getMonth();
+        const dayDiff = today.getDate() - birthDate.getDate();
+
+        // Ajustar la edad si aún no ha cumplido años este año
+        if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
+          age--;
+        }
+
+        updatedPersonalData = { ...updatedPersonalData, age };
+      }
+
+      return {
+        ...prevData,
+        personalData: updatedPersonalData,
+        habits: {
+          ...prevData.habits,
+          [name]: type === "checkbox" ? e.target.checked : value,
+        },
+        personalHistory: {
+          ...prevData.personalHistory,
+          [name]: value,
+        },
+        familyHistory: {
+          ...prevData.familyHistory,
+          [name]: type === "checkbox" ? e.target.checked : value,
+        },
+        gynecoObstetricHistory: {
+          ...prevData.gynecoObstetricHistory,
+          [name]: type === "checkbox" ? e.target.checked : value,
+        },
+        workHistory: {
+          ...prevData.workHistory,
+          [name]: type === "checkbox" ? e.target.checked : value,
+        },
+        evaluation: {
+          ...prevData.evaluation,
+          [name]: value,
+        },
+      };
+    });
   };
 
   const handleExamChange = (
